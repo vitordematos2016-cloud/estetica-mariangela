@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+# TODO: adicionar a linha Sitemap com o domínio oficial assim que for confirmado.

@@ -1,0 +1,536 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Jost:wght@300;400;500;600&display=swap');
+@import 'tailwindcss';
+
+@theme {
+  /* TODO: confirmar a identidade visual oficial da Estética Mariangela.
+     Paleta provisória amostrada do espaço físico (bege rosado + marrom),
+     em três famílias -- bege rosado (predominante), marrom escuro
+     (contraste principal) e marrom claro (apoio/transição). Centralizada
+     aqui: nenhum componente deve usar hex/rgb solto fora destas variáveis. */
+  --color-rose-beige: #d8b7af;
+  --color-rose-beige-light: #f3e5e1;
+  --color-rose-beige-soft: #e7ccc5;
+  --color-brown-dark: #3a2723;
+  --color-brown-deep: #241714;
+  --color-brown-light: #8b6a61;
+  --color-brown-soft: #b5968d;
+
+  /* Aliases usados pelas classes Tailwind já existentes em todo o código
+     (`bg-cream`, `text-brown-dark`, `border-gold`, etc.) -- apontam para a
+     paleta acima, nunca para dourado/cinza/preto/branco puro. */
+  --color-cream: var(--color-rose-beige-light);
+  --color-cream-light: var(--color-rose-beige-soft);
+  --color-beige: var(--color-rose-beige);
+  --color-gold: var(--color-brown-light);
+  --color-gold-soft: var(--color-brown-soft);
+  --color-gold-deep: var(--color-brown-dark);
+  /* Texto secundário + hover "mais profundo" dos botões primários. */
+  --color-brown: var(--color-brown-deep);
+
+  --font-heading: 'Cormorant Garamond', 'Georgia', serif;
+  --font-body: 'Jost', 'Helvetica Neue', sans-serif;
+
+  --shadow-warm: 0 24px 60px -20px rgb(58 39 35 / 0.35);
+  --shadow-warm-sm: 0 8px 24px -8px rgb(58 39 35 / 0.25);
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html,
+  body,
+  #root {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: clip;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    /* Sem isso, o navegador ajusta sozinho a posição de rolagem sempre que
+       algo acima do viewport muda de tamanho (ex.: uma imagem `lazy` que
+       termina de carregar durante uma rolagem programática longa) --
+       "âncora de rolagem" pensada para leitura normal, mas que briga com um
+       `scrollIntoView` em andamento e faz a seção assentar antes do alvo. */
+    overflow-anchor: none;
+  }
+
+  /* Compensa o cabeçalho fixo (76px na maioria das larguras, ~88px quando a
+     logo quebra em duas linhas no mobile bem estreito) ao rolar até uma
+     seção pelo menu -- sem isso o título ficaria escondido atrás dele. */
+  section[id] {
+    scroll-margin-top: 96px;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--color-cream);
+    color: var(--color-brown-dark);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-heading);
+    font-weight: 500;
+    letter-spacing: 0.01em;
+  }
+
+  ::selection {
+    background-color: var(--color-gold);
+    color: var(--color-cream);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer utilities {
+  /* Área de carrossel/mídia tocável -- o gesto horizontal deve trocar a
+     mídia (ou ser consumido pelo drag vertical do lightbox) em vez de
+     brigar com o pan/scroll nativo da página ou com o gesto de "voltar" do
+     navegador. `pan-y` mantém a rolagem vertical funcionando normalmente. */
+  .media-carousel {
+    touch-action: pan-y;
+    overscroll-behavior-x: contain;
+  }
+
+  /* Fileiras de chips horizontais (categorias) -- rolagem horizontal
+     intencional, mas sem deixar o gesto vazar para a página (bounce/scroll
+     chaining) fora dos limites da própria fileira. */
+  .chip-row-scroll {
+    touch-action: pan-x;
+    overscroll-behavior-x: contain;
+  }
+
+  .marquee-track {
+    animation: marquee 30s linear infinite;
+  }
+
+  .marquee-track.is-paused {
+    animation-play-state: paused;
+  }
+
+  .marquee-pause-zone:hover .marquee-track,
+  .marquee-pause-zone:focus-within .marquee-track {
+    animation-play-state: paused;
+  }
+
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  .fade-up {
+    animation: fade-up 0.8s ease-out both;
+  }
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .splash-image-in {
+    animation: splash-image-in 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  @keyframes splash-image-in {
+    from {
+      opacity: 0;
+      transform: scale(1.025);
+      filter: blur(6px);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+      filter: blur(0px);
+    }
+  }
+
+  .splash-beam {
+    position: absolute;
+    inset: -30%;
+    width: 35%;
+    /* Sem `mix-blend-mode: screen` -- essa mistura só "acende" sobre fundo
+       escuro (o antigo `bg-brown-dark`); contra o `bg-cream-light` atual da
+       capa ela quase desaparece (screen sobre uma base já clara tende a
+       branco). O próprio gradiente, com alfa direto, já lê como um filete
+       de luz dourada passando. */
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(169, 138, 129, 0.16),
+      rgba(195, 164, 155, 0.55),
+      rgba(169, 138, 129, 0.16),
+      transparent
+    );
+    filter: blur(12px);
+    animation: splash-beam-sweep 1100ms cubic-bezier(0.45, 0, 0.2, 1) both;
+  }
+
+  @keyframes splash-beam-sweep {
+    from {
+      transform: translateX(-250%) rotate(12deg);
+    }
+    to {
+      transform: translateX(250%) rotate(12deg);
+    }
+  }
+
+  .splash-center-glow {
+    animation: splash-center-glow 700ms ease-out 270ms both;
+  }
+
+  @keyframes splash-center-glow {
+    0% {
+      opacity: 0;
+    }
+    45% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+
+  /* Brilho champagne discreto na saída da capa completa (primeira visita)
+     -- some junto com o resto (`opacity`/`filter`/`transform` do container),
+     só reforça a sensação de transição suave para o Hero. */
+  .splash-exit-glow {
+    animation: splash-exit-glow 700ms ease-out both;
+  }
+
+  @keyframes splash-exit-glow {
+    0% {
+      opacity: 0;
+    }
+    40% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+
+  .splash-line-glow {
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(239, 221, 216, 0.9),
+      transparent
+    );
+    filter: blur(2px);
+    animation: splash-line-glow 600ms ease-out 270ms both;
+  }
+
+  @keyframes splash-line-glow {
+    0% {
+      opacity: 0;
+      transform: scaleX(0.3);
+    }
+    50% {
+      opacity: 1;
+      transform: scaleX(1);
+    }
+    100% {
+      opacity: 0;
+      transform: scaleX(1);
+    }
+  }
+
+  .monogram-reveal {
+    animation: monogram-reveal 600ms cubic-bezier(0.65, 0, 0.35, 1) both;
+  }
+
+  @keyframes monogram-reveal {
+    from {
+      clip-path: inset(0 100% 0 0);
+    }
+    to {
+      clip-path: inset(0 0% 0 0);
+    }
+  }
+
+  /* Portas modernas da seção "Cuidado presente em cada detalhe" -- entrada
+     de clínica premium: madeira clara acetinada, linha dourada champagne e
+     painel de vidro fumê próximos ao centro, puxador vertical fino.
+     `perspective` mora aqui (no container que também recorta a imagem) para
+     que a rotação em 3D das duas metades pareça abrir "para dentro" da
+     moldura, sem nunca ultrapassar a largura da foto (a rotação acontece em
+     torno da própria borda externa de cada porta, então o retângulo nunca
+     cresce além do espaço que já ocupava fechado). */
+  .detail-image-reveal {
+    perspective: 1200px;
+  }
+
+  /* Moldura arquitetônica -- duas linhas finas (bege + dourado) sobre a
+     borda do próprio contêiner, `z-index` acima das portas para permanecer
+     visível (e estática) tanto fechada quanto aberta, sem crescer o
+     componente (é `inset`, não soma largura/altura). */
+  .detail-frame {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    pointer-events: none;
+    border-radius: 2rem;
+    box-shadow:
+      inset 0 0 0 1px rgba(231, 204, 197, 0.9),
+      inset 0 0 0 3px rgba(169, 138, 129, 0.36),
+      inset 0 0 0 4px rgba(231, 204, 197, 0.5);
+  }
+
+  .detail-door {
+    position: absolute;
+    top: 0;
+    width: 50%;
+    height: 100%;
+    z-index: 3;
+    pointer-events: none;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+    border: 1px solid rgba(162, 130, 121, 0.45);
+    background-image:
+      /* verniz acetinado -- diagonal suave, sem parecer tábua rústica */
+      linear-gradient(100deg, rgba(243, 229, 225, 0.22) 0%, transparent 26%, rgba(102, 76, 69, 0.07) 72%, rgba(243, 229, 225, 0.16) 100%),
+      /* veio muito discreto, espaçado -- textura, não ripas aparentes */
+      repeating-linear-gradient(90deg, rgba(113, 84, 77, 0.045) 0px, rgba(113, 84, 77, 0.045) 1px, transparent 1px, transparent 12px),
+      linear-gradient(90deg, #c7a79f 0%, #e3c6bf 46%, #c2a39a 100%);
+    transition: box-shadow 0.4s ease;
+  }
+
+  .detail-door--left {
+    left: 0;
+    transform-origin: left center;
+    box-shadow:
+      inset 0 0 0 1px rgba(243, 229, 225, 0.28),
+      inset 0 0 26px rgba(81, 58, 52, 0.12),
+      0 10px 26px rgba(63, 44, 39, 0.16),
+      inset -10px 0 18px -10px rgba(74, 52, 47, 0.4);
+  }
+
+  .detail-door--right {
+    right: 0;
+    transform-origin: right center;
+    box-shadow:
+      inset 0 0 0 1px rgba(243, 229, 225, 0.28),
+      inset 0 0 26px rgba(81, 58, 52, 0.12),
+      0 10px 26px rgba(63, 44, 39, 0.16),
+      inset 10px 0 18px -10px rgba(74, 52, 47, 0.4);
+  }
+
+  /* Luz champagne suave que só aparece enquanto a porta está aberta --
+     `data-open` é escrito pelo React em sincronia com o `rotateY` do Motion,
+     então o realce acompanha a abertura sem precisar duplicar a lógica de
+     estado em CSS. */
+  .detail-door--left[data-open='true'] {
+    box-shadow:
+      inset 0 0 0 1px rgba(243, 229, 225, 0.28),
+      inset 0 0 26px rgba(81, 58, 52, 0.12),
+      0 10px 26px rgba(63, 44, 39, 0.16),
+      inset -10px 0 18px -10px rgba(74, 52, 47, 0.4),
+      inset -10px 0 20px rgba(243, 228, 224, 0.14),
+      12px 0 30px rgba(68, 47, 43, 0.18);
+  }
+
+  .detail-door--right[data-open='true'] {
+    box-shadow:
+      inset 0 0 0 1px rgba(243, 229, 225, 0.28),
+      inset 0 0 26px rgba(81, 58, 52, 0.12),
+      0 10px 26px rgba(63, 44, 39, 0.16),
+      inset 10px 0 18px -10px rgba(74, 52, 47, 0.4),
+      inset 10px 0 20px rgba(243, 228, 224, 0.14),
+      -12px 0 30px rgba(68, 47, 43, 0.18);
+  }
+
+  /* Painel estreito de vidro fumê/champagne -- opaco o bastante para nunca
+     deixar a foto entrever antes da porta girar (é só um acabamento sobre a
+     própria madeira, não um recorte real). */
+  .detail-door__glass {
+    position: absolute;
+    top: 12%;
+    bottom: 12%;
+    width: 15%;
+    border-radius: 3px;
+    border: 1px solid rgba(180, 149, 140, 0.42);
+    background: linear-gradient(180deg, rgba(243, 229, 225, 0.36), rgba(238, 219, 214, 0.2) 55%, rgba(225, 196, 189, 0.26));
+    box-shadow:
+      inset 0 1px 2px rgba(243, 229, 225, 0.4),
+      inset 0 -1px 3px rgba(113, 84, 77, 0.15);
+    backdrop-filter: blur(3px);
+  }
+
+  .detail-door--left .detail-door__glass {
+    right: 24%;
+  }
+
+  .detail-door--right .detail-door__glass {
+    left: 24%;
+  }
+
+  /* Linha dourada vertical -- fica coladinha ao puxador, perto do encontro
+     central; ganha o papel de "linha de encontro" quando as duas portas
+     estão fechadas (a borda de cada porta soma 2px no centro). */
+  .detail-door__gold-line {
+    position: absolute;
+    top: 8%;
+    bottom: 8%;
+    width: 2px;
+    border-radius: 999px;
+    background: linear-gradient(180deg, transparent, rgba(222, 192, 184, 0.9) 15%, rgba(169, 138, 129, 0.95) 50%, rgba(222, 192, 184, 0.9) 85%, transparent);
+  }
+
+  .detail-door--left .detail-door__gold-line {
+    right: 9%;
+  }
+
+  .detail-door--right .detail-door__gold-line {
+    left: 9%;
+  }
+
+  /* Puxador vertical fino, alongado -- moderno, no lugar dos puxadores
+     pequenos antigos. */
+  .detail-door__handle {
+    position: absolute;
+    top: 50%;
+    width: 5px;
+    height: clamp(58px, 14%, 92px);
+    border-radius: 999px;
+    transform: translateY(-50%);
+    background: linear-gradient(90deg, #806158, #dcbdb5, #94736a);
+    box-shadow:
+      0 2px 8px rgba(69, 48, 44, 0.28),
+      inset 0 1px 1px rgba(243, 229, 225, 0.7);
+  }
+
+  .detail-door--left .detail-door__handle {
+    right: 4%;
+  }
+
+  .detail-door--right .detail-door__handle {
+    left: 4%;
+  }
+
+  /* Mobile: painel de vidro menor e sem blur (evita serrilhado/custo de
+     desempenho em telas pequenas) -- madeira, linha dourada e puxador
+     continuam iguais, só a proporção do vidro muda. */
+  @media (max-width: 640px) {
+    .detail-door__glass {
+      width: 11%;
+      backdrop-filter: none;
+    }
+
+    .detail-frame {
+      box-shadow:
+        inset 0 0 0 1px rgba(231, 204, 197, 0.85),
+        inset 0 0 0 3px rgba(169, 138, 129, 0.32);
+    }
+  }
+
+  .compact-name-in {
+    animation: compact-name-in 380ms ease-out 360ms both;
+  }
+
+  @keyframes compact-name-in {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+      letter-spacing: 0.05em;
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+      letter-spacing: normal;
+    }
+  }
+
+  .compact-line-grow {
+    transform-origin: center;
+    animation: compact-line-grow 300ms ease-out 680ms both;
+  }
+
+  @keyframes compact-line-grow {
+    from {
+      opacity: 0;
+      transform: scaleX(0);
+    }
+    to {
+      opacity: 1;
+      transform: scaleX(1);
+    }
+  }
+
+  /* Contêiner do carrossel de fotos do Hero (HeroImageCarousel) -- define
+     só o tamanho/proporção responsivos (sem layout shift entre as fotos),
+     preservado da versão anterior do Hero. */
+  .hero-visual-scene {
+    position: relative;
+  }
+
+  .hero-visual-image {
+    width: min(34vw, 500px);
+    max-height: min(650px, calc(100dvh - 210px));
+    aspect-ratio: 900 / 1200;
+  }
+
+  @media (max-width: 767px) {
+    .hero-visual-image {
+      width: min(calc(100vw - 36px), 340px);
+      max-height: 60dvh;
+    }
+  }
+
+  /* Enquadramento responsivo das fotos do carrossel do Hero
+     (HeroImageCarousel) -- cada `<img>` recebe `--pos-desktop`/`--pos-tablet`/
+     `--pos-mobile` via `style` (vindos de `siteContent.hero.images`), e estas
+     regras escolhem a variante certa por faixa de tela. Mesmos limiares já
+     usados pela Splash (mobile <768px, tablet 768-1199px, desktop >=1200px). */
+  .hero-image-media {
+    object-position: var(--pos-mobile, center 25%);
+  }
+
+  @media (min-width: 768px) {
+    .hero-image-media {
+      object-position: var(--pos-tablet, var(--pos-mobile, center 25%));
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .hero-image-media {
+      object-position: var(--pos-desktop, var(--pos-tablet, center 25%));
+    }
+  }
+}
