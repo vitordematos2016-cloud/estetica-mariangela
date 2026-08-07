@@ -4,6 +4,16 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
+    inputs:
+      diagnostic_only:
+        description: "Executar somente o diagnostico de raiz FTP, sem publicar"
+        required: false
+        default: "true"
+        type: choice
+        options:
+          - "true"
+          - "false"
 
 jobs:
   deploy:
@@ -37,6 +47,7 @@ jobs:
           curl -s --ftp-method nocwd "ftp://${FTP_HOST}/" --user "${FTP_USER}:${FTP_PASS}"
 
       - name: Deploy via FTP
+        if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.diagnostic_only != 'true' }}
         uses: SamKirkland/FTP-Deploy-Action@v4.4.0
         with:
           server: ${{ secrets.FTP_SERVER }}
