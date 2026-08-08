@@ -64,3 +64,28 @@ jobs:
           port: 21
           local-dir: ./dist/
           server-dir: ${{ secrets.REMOTE_DIR }}
+          log-level: verbose
+
+      - name: Diagnosticar pasta alvo pos-deploy (somente leitura)
+        continue-on-error: true
+        env:
+          FTP_HOST: ${{ secrets.FTP_SERVER }}
+          FTP_USER: ${{ secrets.FTP_USERNAME }}
+          FTP_PASS: ${{ secrets.FTP_PASSWORD }}
+        run: |
+          {
+            echo "=== ./estetica-mariangela/ (pos-deploy) ==="
+            curl -s --ftp-method nocwd "ftp://${FTP_HOST}/estetica-mariangela/" --user "${FTP_USER}:${FTP_PASS}"
+          } > ftp-diagnostico-pos.txt
+          cat ftp-diagnostico-pos.txt
+
+      - name: Publicar diagnostico pos-deploy no repositorio (temporario)
+        continue-on-error: true
+        run: |
+          cp ftp-diagnostico-pos.txt docs/ftp-diagnostico-pos.txt
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git pull --rebase origin main
+          git add docs/ftp-diagnostico-pos.txt
+          git commit -m "chore: diagnostico FTP pos-deploy automatico [skip ci]" || echo "nada para commitar"
+          git push
