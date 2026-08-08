@@ -1,0 +1,4 @@
+=== REMOTE_DIR ===
+comprimento: 0
+primeiro caractere (codigo ascii, 0 se vazio): 
+ultimo caractere (codigo ascii, 0 se vazio): 
