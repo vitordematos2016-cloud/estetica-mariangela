@@ -1,8 +1,7 @@
 export const siteConfig = {
   locale: 'pt-BR',
   timezone: 'America/Sao_Paulo',
-  // TODO: confirmar o domínio oficial da Estética Mariangela.
-  siteUrl: '',
+  siteUrl: 'https://estetica-mariangela.matossolucoes.com',
   // Paleta neutra (branco/cinza/grafite), sem identidade visual definida --
   // ver também as variáveis de tema em `src/index.css` (`@theme`), fonte
   // única usada pelos componentes via classes Tailwind (`bg-cream`,

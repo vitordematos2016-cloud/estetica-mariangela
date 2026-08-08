@@ -36,9 +36,9 @@ final deste arquivo.
 - [ ] Enviar link do Waze (mesmo comportamento).
 - [ ] Confirmar e-mail comercial (nenhum link de e-mail é exibido enquanto
       ausente).
-- [ ] Confirmar domínio oficial do site (`siteConfig.siteUrl`, canonical do
-      `index.html`, `public/robots.txt` e `public/sitemap.xml` ficam vazios
-      até a confirmação).
+- [x] Domínio oficial confirmado: `https://estetica-mariangela.matossolucoes.com`
+      (já aplicado em `siteConfig.siteUrl`, canonical/og:url do `index.html`,
+      `public/robots.txt` e `public/sitemap.xml`).
 
 ⚠️ O endereço comercial divulgado no Instagram (Av. Abilon de Souza Naves)
 é diferente do endereço fiscal encontrado no CNPJ (Av. Manoel Ribas) — o

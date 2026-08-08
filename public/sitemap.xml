@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- TODO: adicionar a URL oficial (<url><loc>...) assim que o domínio da Estética Mariangela for confirmado. -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://estetica-mariangela.matossolucoes.com/</loc>
+  </url>
 </urlset>
