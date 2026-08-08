@@ -1,0 +1,18 @@
+=== Raiz do FTP (/) ===
+drwxr-xr-x  10 u884180139.esteticamariangela o1009419250     4096 Aug  7 02:59 .
+drwxr-xr-x  10 u884180139.esteticamariangela o1009419250     4096 Aug  7 02:59 ..
+-rw-r--r--   1 u884180139.esteticamariangela o1009419250    16395 May 28 16:06 default.php
+drwxr-xr-x   3 u884180139.esteticamariangela o1009419250     4096 Jul 20 20:09 demo-clientes
+drwxr-xr-x   6 u884180139.esteticamariangela o1009419250     4096 Aug  7 02:59 estetica-leticia-balbinott
+drwxr-xr-x   2 u884180139.esteticamariangela o1009419250     4096 Aug  7 19:56 estetica-mariangela
+drwxr-xr-x   2 u884180139.esteticamariangela o1009419250     4096 Jul 21 18:27 fernandaloquetenutri
+drwxr-xr-x   3 u884180139.esteticamariangela o1009419250     4096 Jul 18 14:01 leh-estetic
+drwxr-xr-x   3 u884180139.esteticamariangela o1009419250     4096 Jul 22 20:25 monica-massoterapeuta
+drwxr-xr-x   3 u884180139.esteticamariangela o1009419250     4096 Jul 20 17:19 premium-camarim
+drwxr-xr-x   2 u884180139.esteticamariangela o1009419250     4096 Jul 20 18:59 studio-ellas
+
+=== ./estetica-mariangela/ ===
+drwxr-xr-x   2 u884180139.esteticamariangela o1009419250     4096 Aug  7 19:56 .
+drwxr-xr-x  10 u884180139.esteticamariangela o1009419250     4096 Aug  7 02:59 ..
+-rw-r--r--   1 u884180139.esteticamariangela o1009419250    16395 Aug  7 19:56 default.php
+-rw-r--r--   1 u884180139.esteticamariangela o1009419250    16395 Aug  3 17:51 default.php.old.php
