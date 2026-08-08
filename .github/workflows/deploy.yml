@@ -9,6 +9,8 @@ jobs:
   deploy:
     name: Build and deploy
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout
@@ -26,15 +28,31 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Diagnosticar raiz FTP
+      - name: Diagnosticar raiz FTP e pasta alvo (somente leitura)
         continue-on-error: true
         env:
           FTP_HOST: ${{ secrets.FTP_SERVER }}
           FTP_USER: ${{ secrets.FTP_USERNAME }}
           FTP_PASS: ${{ secrets.FTP_PASSWORD }}
         run: |
-          echo "Listagem da raiz do FTP (diagnostico temporario, somente leitura):"
-          curl -s --ftp-method nocwd "ftp://${FTP_HOST}/" --user "${FTP_USER}:${FTP_PASS}"
+          {
+            echo "=== Raiz do FTP (/) ==="
+            curl -s --ftp-method nocwd "ftp://${FTP_HOST}/" --user "${FTP_USER}:${FTP_PASS}"
+            echo ""
+            echo "=== ./estetica-mariangela/ ==="
+            curl -s --ftp-method nocwd "ftp://${FTP_HOST}/estetica-mariangela/" --user "${FTP_USER}:${FTP_PASS}"
+          } > ftp-diagnostico.txt
+          cat ftp-diagnostico.txt
+
+      - name: Publicar diagnostico no repositorio (temporario)
+        continue-on-error: true
+        run: |
+          cp ftp-diagnostico.txt docs/ftp-diagnostico.txt
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/ftp-diagnostico.txt
+          git commit -m "chore: diagnostico FTP automatico [skip ci]" || echo "nada para commitar"
+          git push
 
       - name: Deploy via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.4.0
