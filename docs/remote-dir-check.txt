@@ -1,2 +1,0 @@
-=== FTP_REMOTE_DIR ===
-comprimento: 22

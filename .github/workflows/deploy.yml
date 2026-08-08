@@ -9,8 +9,6 @@ jobs:
   deploy:
     name: Build and deploy
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
 
     steps:
       - name: Checkout
@@ -27,48 +25,6 @@ jobs:
 
       - name: Build
         run: npm run build
-
-      - name: Limpar residuos na raiz do FTP (uso unico)
-        continue-on-error: true
-        env:
-          FTP_HOST: ${{ secrets.FTP_SERVER }}
-          FTP_USER: ${{ secrets.FTP_USERNAME }}
-          FTP_PASS: ${{ secrets.FTP_PASSWORD }}
-        run: |
-          {
-            echo "=== Antes da limpeza ==="
-            curl -s --connect-timeout 15 --max-time 30 --ftp-method nocwd "ftp://${FTP_HOST}/" --user "${FTP_USER}:${FTP_PASS}"
-            echo ""
-            echo "=== Removendo arquivos indevidos da raiz (deploys antigos com REMOTE_DIR vazio) ==="
-            curl -s --connect-timeout 15 --max-time 60 \
-              -Q "-DELE index.html" \
-              -Q "-DELE robots.txt" \
-              -Q "-DELE sitemap.xml" \
-              -Q "-DELE favicon.svg" \
-              -Q "-DELE .ftp-deploy-sync-state.json" \
-              -Q "-DELE assets/index-sBGsj8mh.js" \
-              -Q "-DELE assets/index-3nJM3Y5Q.css" \
-              -Q "-RMD assets" \
-              -Q "-DELE images/hero/mariangela-hero-01.webp" \
-              -Q "-DELE images/hero/mariangela-hero-02.webp" \
-              -Q "-RMD images/hero" \
-              -Q "-RMD images" \
-              "ftp://${FTP_HOST}/" --user "${FTP_USER}:${FTP_PASS}" || echo "algum item pode ja nao existir, seguindo"
-            echo ""
-            echo "=== Depois da limpeza ==="
-            curl -s --connect-timeout 15 --max-time 30 --ftp-method nocwd "ftp://${FTP_HOST}/" --user "${FTP_USER}:${FTP_PASS}"
-          } > ftp-cleanup.txt
-          cat ftp-cleanup.txt
-
-      - name: Publicar log da limpeza no repositorio (temporario)
-        continue-on-error: true
-        run: |
-          cp ftp-cleanup.txt docs/ftp-cleanup.txt
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/ftp-cleanup.txt
-          git commit -m "chore: log de limpeza FTP automatico [skip ci]" || echo "nada para commitar"
-          git push
 
       - name: Deploy via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.4.0
