@@ -37,10 +37,10 @@ jobs:
         run: |
           {
             echo "=== Raiz do FTP (/) ==="
-            curl -s --ftp-method nocwd "ftp://${FTP_HOST}/" --user "${FTP_USER}:${FTP_PASS}"
+            curl -s --connect-timeout 15 --max-time 30 --ftp-method nocwd "ftp://${FTP_HOST}/" --user "${FTP_USER}:${FTP_PASS}"
             echo ""
             echo "=== ./estetica-mariangela/ ==="
-            curl -s --ftp-method nocwd "ftp://${FTP_HOST}/estetica-mariangela/" --user "${FTP_USER}:${FTP_PASS}"
+            curl -s --connect-timeout 15 --max-time 30 --ftp-method nocwd "ftp://${FTP_HOST}/estetica-mariangela/" --user "${FTP_USER}:${FTP_PASS}"
           } > ftp-diagnostico.txt
           cat ftp-diagnostico.txt
 
@@ -75,7 +75,7 @@ jobs:
         run: |
           {
             echo "=== ./estetica-mariangela/ (pos-deploy) ==="
-            curl -s --ftp-method nocwd "ftp://${FTP_HOST}/estetica-mariangela/" --user "${FTP_USER}:${FTP_PASS}"
+            curl -s --connect-timeout 15 --max-time 30 --ftp-method nocwd "ftp://${FTP_HOST}/estetica-mariangela/" --user "${FTP_USER}:${FTP_PASS}"
           } > ftp-diagnostico-pos.txt
           cat ftp-diagnostico-pos.txt
 
