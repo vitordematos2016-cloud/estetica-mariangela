@@ -1,0 +1,436 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-background text-secondary font-sans antialiased overflow-x-hidden;
+  }
+}
+
+/* Escala tipográfica global — só duas famílias (drama/serifada + sans), hierarquia com clamp()
+   para aproveitar melhor o espaço em desktop sem depender de tamanhos fixos espalhados pelo código. */
+@layer components {
+  .text-h1 {
+    font-family: theme('fontFamily.drama');
+    font-weight: 500;
+    line-height: 1.1;
+    font-size: clamp(2.75rem, 1.7rem + 3.2vw, 4.75rem);
+  }
+  .text-h2 {
+    font-family: theme('fontFamily.drama');
+    font-weight: 500;
+    line-height: 1.15;
+    font-size: clamp(2.25rem, 1.5rem + 2.4vw, 3.5rem);
+  }
+  .text-h3 {
+    font-family: theme('fontFamily.drama');
+    font-weight: 500;
+    line-height: 1.2;
+    font-size: clamp(1.625rem, 1.3rem + 1vw, 2.25rem);
+  }
+  .text-body-lg {
+    font-family: theme('fontFamily.sans');
+    line-height: 1.6;
+    font-size: clamp(1.0625rem, 0.95rem + 0.4vw, 1.25rem);
+  }
+  .text-body {
+    font-family: theme('fontFamily.sans');
+    line-height: 1.6;
+    font-size: clamp(0.9375rem, 0.88rem + 0.2vw, 1rem);
+  }
+  .text-small {
+    font-family: theme('fontFamily.sans');
+    line-height: 1.5;
+    font-size: 0.875rem;
+  }
+  .text-label {
+    font-family: theme('fontFamily.sans');
+    text-transform: uppercase;
+    letter-spacing: 0.28em;
+    font-weight: 700;
+    font-size: 0.75rem;
+  }
+  .text-micro {
+    font-family: theme('fontFamily.sans');
+    text-transform: uppercase;
+    letter-spacing: 0.32em;
+    font-weight: 700;
+    font-size: 0.625rem;
+  }
+
+  /* ===== Sistema de card Glassmorphism (Efeito Vidro) =====
+     Usado por TODO card do site. Base translúcida, desfoque e borda reflexiva. */
+  .card-surface {
+    position: relative;
+    /* Fundo nude translúcido - usa a essência do #F5EEEE */
+    background-color: rgba(245, 238, 238, 0.45);
+    /* Desfoque pesado estilo vidro */
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    /* Borda clara reflexiva imitando a aresta do vidro e borda inferior levemente escura */
+    border-top: 1px solid rgba(255, 255, 255, 0.7);
+    border-left: 1px solid rgba(255, 255, 255, 0.4);
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+    border-bottom: 1px solid rgba(207, 191, 192, 0.4);
+    /* Sombra projetada marrom suave */
+    box-shadow: 0 14px 32px rgba(77, 58, 54, 0.08), 0 4px 12px rgba(77, 58, 54, 0.04);
+    transition: transform 450ms cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 450ms ease, background-color 350ms ease, backdrop-filter 350ms ease;
+  }
+  .card-surface:hover {
+    transform: translateY(-8px);
+    background-color: rgba(255, 255, 255, 0.6);
+    box-shadow: 0 28px 60px rgba(77, 58, 54, 0.16), 0 10px 20px rgba(77, 58, 54, 0.08);
+  }
+  /* Estado "aberto" (FAQ): mais claro, como se aproximasse da tela */
+  .card-surface-open {
+    background-color: rgba(255, 255, 255, 0.75);
+    transform: translateY(-4px);
+    box-shadow: 0 22px 50px rgba(77, 58, 54, 0.13), 0 8px 16px rgba(77, 58, 54, 0.07);
+  }
+
+  /* Variante para cards principais/editoriais: tilt 3D sutil + reflexo seguindo o mouse
+     (--card-rx/--card-ry/--mx/--my são escritos via JS só em desktop com mouse fino). */
+  .card-surface-tilt {
+    transform: perspective(1200px) rotateX(var(--card-rx, 0deg)) rotateY(var(--card-ry, 0deg)) translateY(0);
+  }
+  .card-surface-tilt:hover {
+    transform: perspective(1200px) rotateX(var(--card-rx, 0deg)) rotateY(var(--card-ry, 0deg)) translateY(-8px);
+  }
+  .card-surface-tilt::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, 0.08), transparent 35%);
+    opacity: 0;
+    transition: opacity 400ms ease;
+    pointer-events: none;
+  }
+  .card-surface-tilt:hover::before {
+    opacity: 1;
+  }
+
+  /* Float contínuo, extremamente suave — só para 1-2 elementos de destaque por página */
+  @keyframes card-float {
+    0%, 100% { transform: translateY(-3px); }
+    50% { transform: translateY(3px); }
+  }
+  .card-float {
+    animation: card-float 7.5s ease-in-out infinite;
+  }
+
+  /* Fundo malva com profundidade — luz sutil no topo, nunca chapado */
+  .mauve-surface {
+    position: relative;
+    background-color: theme('colors.mauve');
+    background-image: radial-gradient(ellipse 120% 70% at 50% 0%, rgba(255, 255, 255, 0.07), transparent 60%);
+  }
+
+  /* Atmosfera do Hero — sofisticada, iluminada e respeitando rigorosamente a paleta Nude/Rosa original.
+     Camadas: fundo clarinho (#F5EEEE), halos de luz com as variações (#E7DADB e #CFBFC0). */
+  .hero-atmosphere {
+    position: relative;
+    background-color: #F5EEEE;
+    background-image:
+      radial-gradient(circle at 26% 22%, rgba(255, 255, 255, 0.6), transparent 46%),
+      radial-gradient(circle at 62% 8%, rgba(207, 191, 192, 0.3), transparent 40%),
+      radial-gradient(circle at 90% 70%, rgba(231, 218, 219, 0.5), transparent 50%),
+      linear-gradient(140deg, #F5EEEE 0%, #E7DADB 50%, #CFBFC0 100%);
+  }
+
+  /* Pequenos pontos de luz sobre a curva orgânica do Hero — reflexo na paleta rosa/nude */
+  .hero-light-point {
+    position: absolute;
+    border-radius: 999px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.95), rgba(207, 191, 192, 0) 70%);
+    pointer-events: none;
+  }
+
+  /* Borda animada brilhante para a imagem do Hero */
+  .hero-glow-border {
+    position: relative;
+    /* Fundo da "borda" (caso o gradiente não cubra) */
+    background: rgba(207, 191, 192, 0.15);
+  }
+  
+  @keyframes spin-slow {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  .hero-glow-spinner {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(
+      transparent,
+      transparent 90deg,
+      rgba(255, 255, 255, 0.3) 140deg,
+      rgba(255, 255, 255, 1) 180deg,
+      transparent 180deg,
+      transparent 270deg,
+      rgba(255, 255, 255, 0.3) 320deg,
+      rgba(255, 255, 255, 1) 360deg
+    );
+    animation: spin-slow 4s linear infinite;
+    opacity: 1;
+    z-index: 0;
+  }
+
+  .about-glow-spinner {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(
+      transparent,
+      transparent 90deg,
+      rgba(205, 150, 70, 0.3) 140deg,
+      rgba(205, 150, 70, 1) 180deg,
+      transparent 180deg,
+      transparent 270deg,
+      rgba(230, 185, 110, 0.4) 320deg,
+      rgba(230, 185, 110, 1) 360deg
+    );
+    animation: spin-slow 5s linear infinite;
+    opacity: 1;
+    z-index: 0;
+  }
+
+  /* Texto com gradiente — para os trechos "importantes" que precisam mudar de tom.
+     Apenas variações do marrom oficial (#715955 -> #4D3A36 -> #392A27) para legibilidade estrita. */
+  .text-gradient-warm {
+    background-image: linear-gradient(100deg, #715955 0%, #4D3A36 45%, #392A27 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Destaque "Viaduca-style" para palavras-chave (cores da estética) */
+  .highlight-accent {
+    color: theme('colors.accent');
+    font-weight: 700;
+  }
+
+  /* Botão principal estilo Viaduca (Viaduca style button) */
+  .btn-accent {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.875rem 1.75rem;
+    background-color: theme('colors.primary');
+    color: theme('colors.white-warm');
+    border-radius: 9999px;
+    font-family: theme('fontFamily.sans');
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: transform 400ms cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 400ms ease, background-color 300ms ease;
+    box-shadow: 0 4px 14px rgba(74, 51, 44, 0.2);
+  }
+  .btn-accent:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 10px 24px rgba(74, 51, 44, 0.3);
+    background-color: theme('colors.accent');
+  }
+  .btn-accent:active {
+    transform: translateY(-1px) scale(0.98);
+  }
+  .btn-accent svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    transition: transform 300ms ease;
+  }
+  .btn-accent:hover svg {
+    transform: translateX(2px);
+  }
+
+  /* Glow ao redor de botões principais — halo quente e suave atrás do botão, não neon */
+  .btn-glow {
+    position: relative;
+    z-index: 0;
+  }
+  .btn-glow::before {
+    content: '';
+    position: absolute;
+    inset: -20px;
+    border-radius: inherit;
+    background: radial-gradient(ellipse at center, rgba(255, 168, 120, 0.65), rgba(201, 130, 95, 0.25) 55%, rgba(201, 130, 95, 0) 75%);
+    filter: blur(18px);
+    z-index: -1;
+    opacity: 0.95;
+    transition: opacity 350ms ease, filter 350ms ease;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .btn-glow:hover::before {
+      opacity: 1;
+      filter: blur(22px);
+    }
+  }
+
+  /* Halo de luz ambiente — usado perto da curva/foto do Hero para reforçar a sensação de luz quente */
+  .ambient-glow {
+    position: absolute;
+    border-radius: 999px;
+    background: radial-gradient(circle, rgba(207, 191, 192, 0.4), transparent 70%);
+    filter: blur(40px);
+    pointer-events: none;
+  }
+
+  /* Selo flutuante do Hero — retângulo quase quadrado, levemente rotacionado, flutua continuamente */
+  @keyframes badge-float {
+    0%, 100% { transform: rotate(3deg) translateY(-3px); }
+    50% { transform: rotate(3deg) translateY(3px); }
+  }
+  .hero-badge-float {
+    animation: badge-float 8s ease-in-out infinite;
+  }
+
+  /* Indicador "role para explorar" — pequeno mouse com ponto animado descendo */
+  @keyframes scroll-dot {
+    0% { transform: translateY(0); opacity: 1; }
+    70% { opacity: 1; }
+    100% { transform: translateY(14px); opacity: 0; }
+  }
+  .scroll-dot {
+    animation: scroll-dot 1.8s ease-in-out infinite;
+  }
+
+  /* ===== Header — links flutuantes com profundidade sutil (só desktop com mouse fino;
+     no touch o :hover não gruda, então isso já não aparece no mobile por si só). */
+  .nav-link {
+    position: relative;
+    transition: transform 350ms cubic-bezier(0.2, 0.8, 0.2, 1), color 300ms ease;
+  }
+  .nav-link::before {
+    content: '';
+    position: absolute;
+    inset: -8px -14px;
+    border-radius: 999px;
+    background: rgba(183, 159, 152, 0.16);
+    border: 1px solid rgba(89, 71, 65, 0.18);
+    backdrop-filter: blur(10px);
+    opacity: 0;
+    transform: scale(0.9);
+    transition: opacity 300ms ease, transform 300ms ease;
+    pointer-events: none;
+    z-index: -1;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .nav-link:hover {
+      transform: translateY(-2px) translateZ(8px) scale(1.02);
+      box-shadow: 0 10px 24px rgba(74, 51, 44, 0.09);
+    }
+    .nav-link:hover::before {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  .nav-link:active {
+    transform: translateY(-1px) scale(0.985);
+  }
+
+  /* CTA "Agendar" do Header — profundidade 3D mais perceptível que os links, com reflexo discreto */
+  .nav-cta {
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 12px 26px rgba(74, 51, 44, 0.14);
+    transition: transform 350ms cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 350ms ease, background-color 300ms ease;
+  }
+  .nav-cta::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.12), transparent 55%);
+    opacity: 0;
+    transition: opacity 350ms ease;
+    pointer-events: none;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .nav-cta:hover {
+      transform: translateY(-4px) scale(1.025);
+      box-shadow: 0 20px 38px rgba(74, 51, 44, 0.22);
+    }
+    .nav-cta:hover::after {
+      opacity: 1;
+    }
+  }
+  .nav-cta:active {
+    transform: translateY(-1px) scale(0.985);
+  }
+
+  /* Indicador deslizante do item ativo — uma única superfície que se move entre os links
+     (posição/largura calculadas em JS a partir do link ativo), em vez de recriar um pill por item. */
+  .nav-indicator {
+    position: absolute;
+    top: 50%;
+    height: 38px;
+    margin-top: -19px;
+    border-radius: 999px;
+    background: rgba(183, 159, 152, 0.16);
+    border: 1px solid rgba(89, 71, 65, 0.18);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 24px rgba(74, 51, 44, 0.07);
+    transition: left 450ms cubic-bezier(0.2, 0.8, 0.2, 1), width 450ms cubic-bezier(0.2, 0.8, 0.2, 1), opacity 300ms ease;
+    pointer-events: none;
+    z-index: -1;
+  }
+}
+
+@layer utilities {
+  .noise-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 50;
+    opacity: 0.02;
+  }
+
+  .no-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Magnetic Button Hover State Transition override */
+button {
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+button:hover {
+  transform: scale(1.03);
+}
+
+/* Hero: transição orgânica entre a área clara e a fotografia (curva grande, só desktop) */
+@media (min-width: 1024px) {
+  .hero-organic-mask {
+    clip-path: url(#hero-organic-clip);
+  }
+}
+
+/* Sobre Mim: mesma curva orgânica, espelhada (foto à esquerda, conteúdo à direita) */
+@media (min-width: 1024px) {
+  .about-organic-mask {
+    clip-path: url(#about-organic-clip);
+  }
+}
+
+/* Acessibilidade: respeita a preferência do sistema por menos movimento */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
