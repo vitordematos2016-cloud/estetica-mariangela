@@ -30,7 +30,7 @@ const Location = () => {
 
   return (
     <section id="contato" ref={locationRef} className="w-full mauve-surface py-16 lg:py-24 scroll-mt-[96px] md:scroll-mt-[114px]">
-      <div className="max-w-[1400px] mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+      <div className="container-global grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
         
         {/* Esquerda: Info (40%) */}
         <div className="lg:col-span-5 flex flex-col justify-center">

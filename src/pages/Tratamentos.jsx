@@ -25,9 +25,27 @@ const Tratamentos = () => {
     path: '/tratamentos',
   });
 
-  // Scroll to top upon load
+  // Scroll to top upon load and setup mobile observer
   useEffect(() => {
     window.scrollTo(0, 0);
+
+    // Observer para animar os cards no mobile quando rolar sobre eles
+    const mobileObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-active');
+        } else {
+          entry.target.classList.remove('is-active');
+        }
+      });
+    }, { rootMargin: '-30% 0px -30% 0px' });
+
+    const cards = document.querySelectorAll('.category-card-wrap');
+    if (window.innerWidth < 1024) {
+      cards.forEach(card => mobileObserver.observe(card));
+    }
+
+    return () => mobileObserver.disconnect();
   }, []);
 
   // Ordenação dinâmica das categorias baseada no parâmetro da URL
@@ -70,22 +88,23 @@ const Tratamentos = () => {
 
   // Componente de Card de Categoria Interno
   const CategoryCard = ({ title, description, treatments, image, isLaser = false }) => (
-    <div className="card-surface rounded-[28px] md:rounded-[36px] overflow-hidden flex flex-col h-full border border-accent/20 shadow-[0_20px_60px_-20px_rgba(74,51,44,0.1)] group/card hover:-translate-y-2 transition-transform duration-500">
+    <div className="category-card-wrap bg-[#594741] rounded-[28px] md:rounded-[36px] overflow-hidden flex flex-col h-full border-[3px] border-white/15 group-hover/card:border-white/40 group-[.is-active]/card:border-white/40 shadow-[0_18px_42px_rgba(74,51,44,.12)] group-hover/card:shadow-[0_32px_70px_rgba(74,51,44,.20)] group-[.is-active]/card:shadow-[0_32px_70px_rgba(74,51,44,.20)] group/card hover:-translate-y-2 group-[.is-active]/card:-translate-y-2 transition-all duration-500 transform perspective-1200">
       
       {/* Imagem */}
       <div className="h-[220px] sm:h-[260px] w-full relative overflow-hidden shrink-0">
         <img 
           src={image} 
           alt={title} 
-          className="w-full h-full object-cover transition-transform duration-700 group-hover/card:scale-105"
+          className="w-full h-full object-cover transition-transform duration-700 group-hover/card:scale-105 group-[.is-active]/card:scale-105"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-80 pointer-events-none" />
+        {/* Degradê apenas na borda inferior da foto */}
+        <div className="absolute bottom-0 left-0 w-full h-[35%] bg-gradient-to-t from-[#594741] to-transparent pointer-events-none" />
       </div>
       
       {/* Conteúdo */}
-      <div className="p-6 md:p-8 flex flex-col flex-1 relative bg-background/50">
-        <h2 className="font-drama text-primary text-[26px] tracking-wide mb-3">{title}</h2>
-        <p className="font-sans text-secondary text-[14px] leading-relaxed mb-8 opacity-90">
+      <div className="p-6 md:p-8 pt-2 flex flex-col flex-1 relative bg-[#594741]">
+        <h2 className="font-drama text-white-warm text-[28px] md:text-[32px] tracking-wide mb-3">{title}</h2>
+        <p className="font-sans text-white-warm/80 text-[14px] leading-relaxed mb-8">
           {description}
         </p>
         
@@ -96,35 +115,35 @@ const Tratamentos = () => {
               <Link 
                 key={t.slug} 
                 to={`/tratamentos/${t.slug}`}
-                className="group flex items-start justify-between text-left pb-4 border-b border-accent/10 hover:border-accent/30 transition-colors last:border-0"
+                className="group/item flex items-start justify-between text-left pb-4 border-b border-white/10 hover:border-white/30 group-[.is-active]/card:border-white/20 transition-colors last:border-0"
               >
                 <div className="flex gap-3">
-                  <t.icon className="w-[18px] h-[18px] text-accent shrink-0 mt-1" />
+                  <t.icon className="w-[18px] h-[18px] text-[#B79F98] shrink-0 mt-1" />
                   <div>
-                    <h4 className="font-sans font-semibold text-primary text-[15px] group-hover:text-accent transition-colors">{t.title}</h4>
-                    <p className="font-sans text-secondary text-[12.5px] line-clamp-1 mt-0.5 opacity-80">{t.catalogSummary}</p>
+                    <h4 className="font-sans font-semibold text-white-warm text-[15px] group-hover/item:text-[#B79F98] transition-colors">{t.title}</h4>
+                    <p className="font-sans text-white-warm/60 text-[12.5px] line-clamp-1 mt-0.5">{t.catalogSummary}</p>
                   </div>
                 </div>
-                <div className="shrink-0 ml-4 w-[28px] h-[28px] rounded-full border border-accent/20 flex items-center justify-center text-accent group-hover:bg-accent group-hover:text-white transition-all">
-                  <ArrowRight className="w-3 h-3" />
+                <div className="shrink-0 ml-4 w-[28px] h-[28px] rounded-full border border-white/20 flex items-center justify-center text-white-warm group-hover/item:bg-[#B79F98] group-hover/item:border-[#B79F98] group-hover/item:text-[#594741] transition-all">
+                  <ArrowRight className="w-3 h-3 group-hover/item:translate-x-0.5" />
                 </div>
               </Link>
             ))
           ) : (
             <div className="flex flex-col items-center text-center h-full pt-4 pb-2">
-              <h4 className="font-drama text-primary text-[20px] md:text-[22px] tracking-wide mb-4">
+              <h4 className="font-drama text-white-warm text-[20px] md:text-[22px] tracking-wide mb-4">
                 {LASER.title}
               </h4>
-              <div className="font-sans text-secondary text-[13.5px] leading-relaxed opacity-90 mb-6 flex flex-col gap-3 px-2">
+              <div className="font-sans text-white-warm/80 text-[13.5px] leading-relaxed mb-6 flex flex-col gap-3 px-2">
                 {LASER.summary.split('\n').map((line, idx) => (
                   line.trim() ? <p key={idx}>{line}</p> : null
                 ))}
               </div>
-                <a 
-                  href={buildWaLink('Olá, Mariangela! Vi as informações sobre depilação a laser no site e gostaria de saber mais sobre as áreas atendidas e os horários disponíveis.')}
-                  target="_blank"
-                  rel="noreferrer"
-                className="mt-auto btn-accent text-[13px] h-[44px] px-6 w-full max-w-[240px]"
+              <a 
+                href={buildWaLink('Olá, Mariangela! Vi as informações sobre depilação a laser no site e gostaria de saber mais sobre as áreas atendidas e os horários disponíveis.')}
+                target="_blank"
+                rel="noreferrer"
+                className="mt-auto bg-[#B79F98] hover:bg-white-warm text-[#4A332C] transition-colors rounded-full flex items-center justify-center text-[13.5px] font-semibold h-[46px] px-8 w-full max-w-[240px] transform group-hover/card:scale-105 group-[.is-active]/card:scale-105 duration-300"
               >
                 Agendar avaliação
               </a>
@@ -133,18 +152,18 @@ const Tratamentos = () => {
         </div>
         
         {/* Footer CTA */}
-        <div className="mt-auto pt-6 border-t border-accent/20">
-          <a href={buildWaLink('Olá, Mariangela! Vi os tratamentos no site, mas ainda estou em dúvida sobre qual seria o mais adequado para mim. Você pode me orientar?')} target="_blank" rel="noreferrer" className="flex items-center justify-between group">
-            <div className="flex items-center gap-3 text-secondary">
-              <div className="w-10 h-10 rounded-full bg-background flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors shadow-sm">
+        <div className="mt-auto pt-6 border-t border-white/10 group-hover/card:border-white/20 group-[.is-active]/card:border-white/20 transition-colors">
+          <a href={buildWaLink('Olá, Mariangela! Vi os tratamentos no site, mas ainda estou em dúvida sobre qual seria o mais adequado para mim. Você pode me orientar?')} target="_blank" rel="noreferrer" className="flex items-center justify-between group/cta">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white-warm group-hover/cta:bg-[#B79F98] group-hover/cta:text-[#594741] transition-colors">
                 <WhatsAppIcon className="w-[18px] h-[18px]" />
               </div>
               <div>
-                <p className="text-[9px] uppercase tracking-[0.2em] font-bold text-accent mb-0.5">Não sabe qual escolher?</p>
-                <p className="text-[14px] font-semibold text-primary">Fale com a Mariangela</p>
+                <p className="text-[9px] uppercase tracking-[0.2em] font-bold text-[#B79F98] mb-0.5">Não sabe qual escolher?</p>
+                <p className="text-[14px] font-semibold text-white-warm">Fale com a Mariangela</p>
               </div>
             </div>
-            <ArrowRight className="w-5 h-5 text-accent group-hover:translate-x-1 transition-transform" />
+            <ArrowRight className="w-5 h-5 text-[#B79F98] group-hover/cta:translate-x-1 transition-transform" />
           </a>
         </div>
       </div>
@@ -155,7 +174,7 @@ const Tratamentos = () => {
     <div className="mauve-surface min-h-screen">
       
       {/* TOPO DA PÁGINA */}
-      <div className="pt-32 md:pt-40 pb-16 md:pb-20 px-6 md:px-12 max-w-7xl mx-auto text-center">
+      <div className="pt-32 md:pt-40 pb-16 md:pb-20 container-global text-center">
         <h4 className="text-label text-accent mb-6">TRATAMENTOS</h4>
         <h1 className="font-drama text-primary text-[32px] md:text-[44px] lg:text-[52px] leading-[1.1] mb-6 max-w-4xl mx-auto">
           Cuidados escolhidos para <span className="text-accent italic font-light">cada necessidade.</span>
@@ -166,7 +185,7 @@ const Tratamentos = () => {
       </div>
 
       {/* ÁREA PRINCIPAL — 3 CATEGORIAS */}
-      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-8 pb-24">
+      <div className="container-global px-4 sm:px-6 md:px-8 pb-24">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 items-start">
           
           {categories.map((cat) => (
@@ -184,7 +203,7 @@ const Tratamentos = () => {
       </div>
 
       {/* FAIXA ABAIXO DOS CARDS */}
-      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-8 pb-32">
+      <div className="container-global px-4 sm:px-6 md:px-8 pb-32">
         <div className="flex flex-col xl:flex-row gap-6 lg:gap-8">
           
           {/* Benefícios */}

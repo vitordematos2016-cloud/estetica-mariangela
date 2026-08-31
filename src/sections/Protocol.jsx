@@ -10,118 +10,176 @@ const Protocol = () => {
 
   useEffect(() => {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    
+    // Observer para animar os cards no mobile quando rolar sobre eles
+    const mobileObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-active');
+        } else {
+          entry.target.classList.remove('is-active');
+        }
+      });
+    }, { rootMargin: '-30% 0px -30% 0px' }); // Ativa quando o card cruza a área central da tela
+
+    const cards = document.querySelectorAll('.protocol-card');
+    if (window.innerWidth < 1024) {
+      cards.forEach(card => mobileObserver.observe(card));
+    }
+
     const ctx = gsap.context(() => {
       if (reduced) {
         gsap.set('.proto-anim', { clearProps: 'all', opacity: 1 });
         return;
       }
+      
       const tl = gsap.timeline({
         defaults: { ease: 'power3.out' },
         scrollTrigger: { trigger: container.current, start: 'top 75%' },
       });
-      tl.fromTo('.proto-anim-text', { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, stagger: 0.15 })
-        .fromTo('.proto-anim-card', { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.9, stagger: 0.15, clearProps: 'transform' }, '-=0.4');
+      
+      tl.fromTo('.proto-label', { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6 })
+        .fromTo('.proto-headline', { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7 }, '-=0.4')
+        .fromTo('.proto-text', { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7 }, '-=0.5')
+        .fromTo('.proto-card', { y: 30, opacity: 0, scale: 0.985 }, { y: 0, opacity: 1, scale: 1, duration: 0.8, stagger: 0.15, clearProps: 'transform' }, '-=0.4')
+        .fromTo('.proto-cta', { y: 20, opacity: 0, scale: 0.985 }, { y: 0, opacity: 1, scale: 1, duration: 0.8, clearProps: 'transform' }, '-=0.4')
+        .fromTo('.proto-watermark', { opacity: 0 }, { opacity: 0.06, duration: 1.5 }, '-=0.8');
     }, container);
-    return () => ctx.revert();
+    
+    return () => {
+      ctx.revert();
+      mobileObserver.disconnect();
+    };
   }, []);
 
   const categories = [
     {
       id: 'facial',
-      title: 'FACIAL',
-      desc: 'Tecnologias e cuidados avançados para uma pele saudável, firme e iluminada.',
-      img: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?q=80&w=800&auto=format&fit=crop'
+      number: '01',
+      label: 'FACIAL',
+      title: 'Cuidados para a pele',
+      subtext: '6 tratamentos',
+      cta: 'Ver todos os tratamentos',
+      img: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?q=80&w=800&auto=format&fit=crop',
+      mt: 'md:mt-0'
     },
     {
       id: 'corporal',
-      title: 'CORPORAL',
-      desc: 'Protocolos que modelam, promovem bem-estar e valorizam o cuidado com o corpo.',
-      img: 'https://images.unsplash.com/photo-1600334129128-685c5582fd35?q=80&w=800&auto=format&fit=crop'
+      number: '02',
+      label: 'CORPORAL',
+      title: 'Bem-estar e cuidados corporais',
+      subtext: '9 tratamentos',
+      cta: 'Ver todos os tratamentos',
+      img: 'https://images.unsplash.com/photo-1600334129128-685c5582fd35?q=80&w=800&auto=format&fit=crop',
+      mt: 'md:-mt-4' // Desnível solicitado
     },
     {
-      id: 'laser',
-      title: 'DEPILAÇÃO A LASER',
-      desc: 'Mais conforto, praticidade e pele lisa por muito mais tempo.',
-      img: 'https://images.unsplash.com/photo-1552693673-1bf958298935?q=80&w=800&auto=format&fit=crop'
+      id: 'depilacao',
+      number: '03',
+      label: 'DEPILAÇÃO',
+      title: 'Laser Hakon 4D',
+      subtext: 'Redução progressiva dos pelos',
+      cta: 'Ver todos os tratamentos',
+      img: 'https://images.unsplash.com/photo-1552693673-1bf958298935?q=80&w=800&auto=format&fit=crop',
+      mt: 'md:mt-0'
     }
   ];
 
   return (
-    <section id="especialidades" ref={container} className="mauve-surface relative py-28 lg:py-40 px-6 md:px-12 overflow-hidden">
+    <section id="especialidades" ref={container} className="relative py-28 lg:py-40 px-6 md:px-12 overflow-hidden bg-mauve" style={{ backgroundImage: 'radial-gradient(ellipse 120% 70% at 50% 0%, rgba(255, 255, 255, 0.12), transparent 60%)' }}>
       
       {/* Marca d'água */}
       <img 
         src="/logo-perfil.png" 
         alt="Marca d'água Mariangela"
-        className="absolute -top-12 right-[2%] w-[300px] h-[300px] lg:w-[420px] lg:h-[420px] opacity-[0.04] mix-blend-multiply pointer-events-none object-contain"
+        className="proto-watermark absolute top-10 -right-[5%] w-[400px] h-[400px] lg:w-[600px] lg:h-[600px] mix-blend-multiply pointer-events-none object-contain"
+        style={{ opacity: 0 }}
       />
 
-      {/* Botânicos */}
-      <Leaf className="absolute bottom-10 right-8 w-16 h-16 text-secondary rotate-[150deg] pointer-events-none opacity-50" strokeWidth={0.5} />
-      <Leaf className="absolute top-24 left-4 w-12 h-12 text-secondary rotate-[-25deg] pointer-events-none hidden lg:block opacity-50" strokeWidth={0.5} />
+      {/* Line Art Botânicos */}
+      <Leaf className="absolute bottom-12 right-12 w-20 h-20 text-brown-dark rotate-[150deg] pointer-events-none opacity-[0.12]" strokeWidth={0.5} />
+      <Leaf className="absolute top-20 left-10 w-16 h-16 text-brown-dark rotate-[-25deg] pointer-events-none hidden lg:block opacity-[0.12]" strokeWidth={0.5} />
 
-      <div className="max-w-[1360px] mx-auto relative z-10">
+      <div className="container-global relative z-10 flex flex-col items-center">
         
-        {/* Cabeçalho */}
-        <div className="text-center mb-16 lg:mb-20 flex flex-col items-center">
-          <div className="proto-anim-text flex items-center gap-3 mb-6">
-            <span className="h-px w-8 bg-primary/30" />
-            <span className="text-micro text-primary">Nossas Especialidades</span>
-            <span className="h-px w-8 bg-primary/30" />
+        {/* Cabeçalho Editorial */}
+        <div className="text-center md:text-left md:self-start w-full max-w-3xl mb-16 lg:mb-24 flex flex-col">
+          <div className="proto-label flex items-center justify-center md:justify-start gap-3 mb-6">
+            <span className="text-[11px] font-sans font-bold tracking-[0.25em] text-coffee-deep uppercase">TRATAMENTOS</span>
+            <span className="h-[1px] w-12 bg-coffee-deep/40" />
           </div>
-          <h2 className="proto-anim-text flex flex-col items-center mb-6">
-            <span className="text-h2 text-primary">
-              Procedimentos <span className="text-gradient-warm font-semibold">exclusivos</span>
+          
+          <h2 className="proto-headline flex flex-col mb-6">
+            <span className="font-drama text-[36px] md:text-[46px] lg:text-[52px] leading-tight text-coffee-deep">
+              Cuidados para diferentes
             </span>
-            <span className="font-drama italic text-accent mt-1" style={{ fontSize: 'clamp(2.5rem, 2.1rem + 2vw, 3.6rem)' }}>
-              para o seu bem-estar.
+            <span className="font-drama text-[36px] md:text-[46px] lg:text-[52px] leading-tight italic text-coffee-light">
+              momentos e necessidades.
             </span>
           </h2>
-          <p className="proto-anim-text text-body-lg text-secondary max-w-2xl">
-            Descubra nossas três grandes áreas de atuação. Cada procedimento é definido de forma <span className="text-primary font-semibold">individualizada</span>, respeitando as necessidades do seu <span className="highlight-accent">corpo</span> e da sua <span className="highlight-accent">pele</span>.
+          
+          <p className="proto-text font-sans text-[16px] md:text-[18px] text-coffee-deep/80 max-w-xl leading-relaxed">
+            Conheça os cuidados oferecidos pela Mariangela e encontre a categoria que mais combina com o que você procura.
           </p>
         </div>
 
-        {/* 3 Cards de Categoria */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+        {/* 3 Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full relative z-20">
           {categories.map((cat) => (
             <Link 
               key={cat.id}
               to={`/tratamentos?cat=${cat.id}`} 
-              className="proto-anim-card group card-surface rounded-[28px] md:rounded-[36px] overflow-hidden flex flex-col border border-accent/20 hover:-translate-y-2 transition-transform duration-500"
+              className={`proto-card group protocol-card flex flex-col relative overflow-hidden w-full h-[460px] lg:h-[490px] ${cat.mt}`}
             >
-              <div className="h-56 sm:h-64 w-full relative overflow-hidden shrink-0">
+              {/* Imagem Superior */}
+              <div className="h-[55%] w-full relative overflow-hidden shrink-0">
                 <img 
                   src={cat.img} 
                   alt={cat.title} 
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  className="w-full h-full object-cover transition-transform duration-[800ms] group-hover:scale-[1.05] group-[.is-active]:scale-[1.05]"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-transparent opacity-80" />
+                {/* Degradê apenas na borda inferior da foto (35% da altura) para fundir sem manchar o topo */}
+                <div className="absolute bottom-0 left-0 w-full h-[35%] bg-gradient-to-t from-[#594741] to-transparent" />
               </div>
-              <div className="p-8 flex flex-col flex-1 bg-background/50 text-center items-center">
-                <h3 className="font-drama text-primary text-[26px] md:text-[28px] font-semibold tracking-wide mb-3">{cat.title}</h3>
-                <p className="font-sans text-secondary text-[14.5px] leading-relaxed mb-8 opacity-90">
-                  {cat.desc}
+              
+              {/* Símbolo decorativo logo (Flutuando entre a imagem e o fundo) */}
+              <div className="absolute right-6 top-[48%] -translate-y-1/2 w-12 h-12 rounded-full border border-white/20 bg-[#654E46]/60 backdrop-blur-md flex items-center justify-center z-20 transition-transform duration-500 group-hover:scale-110 group-[.is-active]:scale-110 shadow-lg">
+                <Leaf className="w-5 h-5 text-white-warm opacity-90" strokeWidth={1} />
+              </div>
+              
+              {/* Conteúdo Inferior (Fundo Marrom Escuro) */}
+              <div className="flex flex-col flex-1 px-8 pb-8 pt-4 z-10 bg-[#594741] relative">
+                <div className="mb-2">
+                  <span className="font-sans text-[11px] font-bold tracking-[0.2em] text-[#B79F98] uppercase">
+                    {cat.number} — {cat.label}
+                  </span>
+                </div>
+                
+                <h3 className="font-drama text-white-warm text-[28px] md:text-[32px] lg:text-[34px] leading-tight mb-2 pr-2 transition-colors group-hover:text-white group-[.is-active]:text-white">{cat.title}</h3>
+                
+                <p className="font-sans text-white-warm/80 text-[14px]">
+                  {cat.subtext}
                 </p>
-                <div className="mt-auto flex items-center gap-2 text-accent font-semibold text-[13px] uppercase tracking-widest group-hover:text-primary transition-colors">
-                  Ver tratamentos
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                
+                <div className="mt-auto pt-5 border-t border-white-warm/10 flex items-center justify-between text-white-warm font-sans font-medium text-[14px] group-hover:text-[#B79F98] group-[.is-active]:text-[#B79F98] transition-all duration-300">
+                  <span>{cat.cta}</span>
+                  <ArrowRight className="w-4 h-4 transform group-hover:translate-x-2 group-[.is-active]:translate-x-2 transition-transform duration-300" />
                 </div>
               </div>
             </Link>
           ))}
         </div>
 
-        {/* Chamada para Ação (CTA) */}
-        <div className="mt-14 lg:mt-20 flex justify-center">
+        {/* Final CTA */}
+        <div className="mt-20 lg:mt-24 proto-cta relative z-20">
           <a
-            href={buildWaLink('Olá, Mariangela! Estava conhecendo os tratamentos pelo site e gostaria de agendar uma avaliação para entender qual procedimento é mais indicado para mim.')}
+            href={buildWaLink('Olá, Mariangela! Gostaria de falar sobre os tratamentos e entender qual é o mais indicado para mim.')}
             target="_blank"
             rel="noreferrer"
-            className="proto-anim-card btn-accent btn-glow inline-flex items-center justify-center gap-2 text-[15px] h-[54px] md:h-[58px] px-8 md:px-10"
+            className="protocol-cta inline-flex items-center justify-center gap-2 text-[15px] md:text-[16px] font-semibold h-[60px] md:h-[64px] px-10 md:px-12"
           >
-            <WhatsAppIcon className="w-[18px] h-[18px]" />
-            Falar com especialista
+            <WhatsAppIcon className="w-5 h-5" />
+            Falar com a Mariangela pelo WhatsApp
           </a>
         </div>
 

@@ -16,6 +16,10 @@ export default {
         secondary: "#715955",      // Textos secundários, descrições
         "white-warm": "#FFF8F6",   // Texto claro sobre áreas escuras (botões accent)
         "accent-light": "#CFBFC0", // Tom de base para linhas, bordas sutis e divisores
+        "brown-soft": "#B79F98",
+        "brown-dark": "#594741",
+        "coffee-deep": "#4A332C",
+        "coffee-light": "#654E46",
       },
       fontFamily: {
         sans: ["Plus Jakarta Sans", "Outfit", "sans-serif"],

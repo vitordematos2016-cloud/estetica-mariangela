@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, ChevronDown, ArrowRight } from 'lucide-react';
+import { Menu, X, ChevronDown, ArrowRight, Sparkles, Activity, Zap, Leaf } from 'lucide-react';
 import BrandMark from './BrandMark.jsx';
 import WhatsAppIcon from './WhatsAppIcon.jsx';
 import { buildWaLink } from '../data/business.js';
@@ -36,29 +36,320 @@ const CATEGORIES = ['facial', 'corporal', 'depilacao'];
 const treatmentsByCategory = (cat) => TREATMENTS_CATALOG.filter((t) => t.category === cat);
 const treatmentHref = (t, cat) => (t.hasDetailPage ? `/tratamentos/${t.slug}` : `/tratamentos?cat=${cat}`);
 
-const MegaMenuPanel = () => (
-  <div className="absolute top-full left-1/2 -translate-x-1/2 pt-4 w-[620px] opacity-0 invisible -translate-y-1 scale-[0.98] group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:scale-100 group-focus-within:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:scale-100 transition-all duration-300 [transition-timing-function:cubic-bezier(0.2,0.8,0.2,1)] z-40">
-    <div className="bg-card border border-[rgba(89,71,65,0.55)] rounded-[24px] shadow-[0_28px_60px_rgba(74,51,44,0.16)] p-8 grid grid-cols-3 gap-8">
-      {CATEGORIES.map((cat) => (
-        <div key={cat}>
-          <h4 className="text-micro text-accent mb-4">{CATEGORY_LABELS[cat]}</h4>
-          <ul className="flex flex-col gap-2.5">
-            {treatmentsByCategory(cat).map((t) => (
-              <li key={t.slug}>
-                <Link
-                  to={treatmentHref(t, cat)}
-                  className="font-sans text-[13.5px] text-secondary hover:text-accent transition-colors"
-                >
-                  {t.title}
-                </Link>
-              </li>
-            ))}
-          </ul>
+const CAT_ICONS = {
+  facial: Sparkles,
+  corporal: Activity,
+  depilacao: Zap
+};
+
+const MegaMenuPanel = ({ isOpen, onClose }) => {
+  const [activeCat, setActiveCat] = useState('facial');
+  const [isChanging, setIsChanging] = useState(false);
+  const currentTreatments = treatmentsByCategory(activeCat);
+  const featured = currentTreatments.find(t => t.featured) || currentTreatments[0];
+
+  const handleCatChange = (cat) => {
+    if (cat === activeCat) return;
+    setIsChanging(true);
+    setTimeout(() => {
+      setActiveCat(cat);
+      setIsChanging(false);
+    }, 150); // Metade do fade para trocar o conteúdo no escuro
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && isOpen) onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
+  // Fecha clicando fora tratado no Wrapper ou aqui
+  useEffect(() => {
+    if (!isOpen) {
+      // reseta para facial quando fecha
+      setTimeout(() => setActiveCat('facial'), 300);
+    }
+  }, [isOpen]);
+
+  return (
+    <div 
+      className={`absolute top-full left-[50%] -translate-x-[50%] pt-4 w-[1000px] transition-all duration-350 ease-[cubic-bezier(0.2,0.8,0.2,1)] z-40 ${
+        isOpen ? 'opacity-100 visible translate-y-0 scale-100' : 'opacity-0 invisible -translate-y-[10px] scale-[0.975]'
+      }`}
+      style={{ perspective: '1200px' }}
+    >
+      <div 
+        className="p-8 pb-6 flex flex-col relative overflow-hidden"
+        style={{
+          background: 'linear-gradient(135deg, rgba(207,191,192,.98), rgba(183,159,152,.96))',
+          border: '1px solid rgba(89,71,65,.55)',
+          boxShadow: '0 32px 80px rgba(74,51,44,.20), 0 10px 24px rgba(74,51,44,.08)',
+          borderRadius: '28px',
+          transform: isOpen ? 'rotateX(0.5deg)' : 'rotateX(0)',
+          transition: 'transform 400ms ease'
+        }}
+      >
+        
+        {/* Header */}
+        <div className="flex items-center justify-between pb-5 mb-6 border-b border-[#594741]/15">
+          <div className="flex items-center gap-2 text-[#4A332C]">
+            <Leaf className="w-4 h-4 opacity-70" />
+            <span className="text-[10.5px] uppercase font-bold tracking-[0.2em] opacity-90">Explore nossos cuidados</span>
+          </div>
+          <Link to="/tratamentos" onClick={onClose} className="group/link text-[12.5px] font-sans font-semibold text-[#4A332C] hover:text-[#4A332C] flex items-center gap-1.5 transition-colors">
+            Ver todos os tratamentos <ArrowRight className="w-3.5 h-3.5 transform group-hover/link:translate-x-1 transition-transform" />
+          </Link>
         </div>
-      ))}
+
+        {/* Corpo (3 colunas) */}
+        <div className="grid grid-cols-[240px_1fr_280px] gap-10">
+          
+          {/* Col 1: Categorias */}
+          <div className="flex flex-col gap-2 relative">
+            <div className="absolute left-0 top-0 bottom-0 w-[1px] bg-[#594741]/10 rounded-full" />
+            
+            {CATEGORIES.map((cat) => {
+              const isActive = activeCat === cat;
+              const Icon = CAT_ICONS[cat];
+              const tCount = treatmentsByCategory(cat).length;
+              
+              return (
+                <button
+                  key={cat}
+                  onMouseEnter={() => handleCatChange(cat)}
+                  onClick={() => handleCatChange(cat)}
+                  className={`w-full text-left flex items-center gap-4 py-3.5 px-4 rounded-[18px] transition-all duration-300 ${
+                    isActive 
+                      ? 'bg-[rgba(255,255,255,0.4)] border border-[rgba(89,71,65,0.2)] shadow-[0_16px_34px_rgba(74,51,44,.14)] translate-x-[2px] -translate-y-[2px] relative z-10' 
+                      : 'border border-transparent hover:bg-white/10'
+                  }`}
+                >
+                  <div className={`flex items-center justify-center w-[42px] h-[42px] rounded-full border transition-colors ${
+                    isActive ? 'bg-[#594741] border-[#594741] text-[#FFF8F6]' : 'bg-transparent border-[#594741]/20 text-[#594741]'
+                  }`}>
+                    <Icon className="w-5 h-5" />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className={`font-sans font-bold text-[15px] ${isActive ? 'text-[#4A332C]' : 'text-[#4A332C]/80'}`}>
+                      {CATEGORY_LABELS[cat]}
+                    </span>
+                    <span className="font-sans text-[11.5px] text-[#4A332C]/60">
+                      {tCount} cuidado{tCount > 1 ? 's' : ''}
+                    </span>
+                  </div>
+                  <ChevronDown className={`w-4 h-4 ml-auto transition-transform duration-300 ${isActive ? 'opacity-100 -rotate-90 text-[#4A332C]' : 'opacity-0 text-[#4A332C]/50'}`} />
+                </button>
+              );
+            })}
+            
+            {/* CTA Extra embaixo das categorias */}
+            <div className="mt-auto pt-6 px-4">
+              <p className="font-sans text-[11px] text-[#4A332C]/70 leading-relaxed font-medium">
+                <Leaf className="w-3.5 h-3.5 inline mr-1 opacity-60" />
+                Todos os tratamentos são personalizados para você.
+              </p>
+            </div>
+          </div>
+
+          {/* Wrapper Animado para Col 2 e Col 3 */}
+          <div className={`col-span-2 grid grid-cols-[1fr_280px] gap-10 transition-all duration-250 ${isChanging ? 'opacity-0 translate-x-2' : 'opacity-100 translate-x-0'}`}>
+            
+            {/* Col 2: Lista de Tratamentos */}
+            <div className="flex flex-col">
+              <h4 className="text-[10.5px] uppercase font-bold tracking-[0.2em] text-[#4A332C]/70 mb-4">{CATEGORY_LABELS[activeCat]}</h4>
+              <ul className="flex flex-col pr-4">
+                {currentTreatments.map((t) => (
+                  <li key={t.slug}>
+                    <Link
+                      to={treatmentHref(t, activeCat)}
+                      onClick={onClose}
+                      className="group/item flex items-center justify-between py-3 border-b border-[#594741]/10 hover:border-[#594741]/30 hover:bg-white/5 transition-all duration-300 rounded-md -mx-2 px-2"
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#594741]/30 group-hover/item:bg-[#4A332C] transition-colors" />
+                        <span className="font-sans font-semibold text-[13.5px] text-[#4A332C]/90 group-hover/item:text-[#4A332C] group-hover/item:translate-x-1 transition-transform duration-300">
+                          {t.title}
+                        </span>
+                        {t.featured && (
+                          <span className="px-2 py-[3px] rounded-full bg-[#594741]/10 text-[#4A332C] text-[9.5px] font-bold uppercase tracking-[0.08em] ml-1">
+                            Destaque
+                          </span>
+                        )}
+                      </div>
+                      <ArrowRight className="w-3.5 h-3.5 text-[#594741]/30 group-hover/item:text-[#4A332C] group-hover/item:translate-x-1 transition-all duration-300" />
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Col 3: Card de Destaque */}
+            <div className="flex flex-col">
+              <h4 className="text-[10.5px] uppercase font-bold tracking-[0.2em] text-[#4A332C]/70 mb-4">Tratamento em destaque</h4>
+              {featured && (
+                <Link 
+                  to={treatmentHref(featured, activeCat)}
+                  onClick={onClose}
+                  className="group/feat flex flex-col relative rounded-[24px] overflow-hidden border border-[#594741]/30 hover:border-[#594741]/60 bg-[#B79F98] shadow-[0_14px_30px_rgba(74,51,44,.10)] hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(74,51,44,.15)] transition-all duration-300 h-[280px]"
+                >
+                  <div className="h-[52%] w-full relative overflow-hidden shrink-0">
+                    <img 
+                      src={featured.img} 
+                      alt={featured.title} 
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover/feat:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-[#594741]/10 mix-blend-multiply" />
+                    <div className="absolute bottom-0 left-0 w-full h-[40%] bg-gradient-to-t from-[#B79F98] to-transparent pointer-events-none" />
+                    
+                    {/* Icon floating suspenso */}
+                    <div className="absolute top-4 right-4 w-[34px] h-[34px] rounded-full border border-[#594741]/40 bg-[#B79F98]/90 backdrop-blur-md shadow-md flex items-center justify-center text-[#4A332C]">
+                      <Sparkles className="w-[15px] h-[15px]" />
+                    </div>
+                  </div>
+                  
+                  <div className="p-5 pt-2 flex flex-col flex-1 relative bg-[#B79F98]">
+                    <h5 className="font-sans font-bold text-[#4A332C] text-[15px] leading-tight mb-2 group-hover/feat:text-[#4A332C]">{featured.title}</h5>
+                    <p className="font-sans text-[#4A332C]/80 text-[11.5px] line-clamp-2 leading-relaxed mb-4">
+                      {featured.catalogSummary}
+                    </p>
+                    
+                    <div className="mt-auto flex items-center gap-1.5 text-[#4A332C]/90 font-sans font-bold text-[12px] group-hover/feat:text-[#4A332C] transition-colors">
+                      Conhecer tratamento <ArrowRight className="w-3.5 h-3.5 transform group-hover/feat:translate-x-1 transition-transform" />
+                    </div>
+                  </div>
+                </Link>
+              )}
+            </div>
+
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
-);
+  );
+};
+
+// Wrapper para gerenciar o hover (área de tolerância) e o link especial
+const MegaMenuWrapper = ({ active, link, goToSection, linkRefs }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const timeoutRef = useRef(null);
+  const wrapperRef = useRef(null);
+
+  const handleMouseEnter = () => {
+    clearTimeout(timeoutRef.current);
+    setIsOpen(true);
+  };
+
+  const handleMouseLeave = () => {
+    timeoutRef.current = setTimeout(() => {
+      setIsOpen(false);
+    }, 180); // Tolerância
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  return (
+    <div 
+      ref={wrapperRef}
+      className="relative" 
+      onMouseEnter={handleMouseEnter} 
+      onMouseLeave={handleMouseLeave}
+    >
+      <a
+        ref={(el) => { linkRefs.current[link.id] = el; }}
+        href={`#${link.id}`}
+        onClick={(e) => { e.preventDefault(); goToSection(link.id); setIsOpen(false); }}
+        className={`nav-link relative py-[6px] px-[14px] duration-300 whitespace-nowrap rounded-[100px] border transition-all flex items-center gap-1 ${
+          isOpen || active
+            ? 'bg-[#CFBFC0]/30 border-[#CFBFC0]/50 shadow-[0_4px_12px_rgba(74,51,44,.05)] text-[#4A332C] font-semibold'
+            : 'border-transparent text-secondary hover:text-accent'
+        }`}
+        aria-expanded={isOpen}
+        aria-haspopup="true"
+      >
+        {link.label}
+        {isOpen ? (
+          <ChevronDown className="w-3.5 h-3.5 text-[#4A332C] rotate-180 transition-transform duration-300" />
+        ) : (
+          <ChevronDown className="w-3.5 h-3.5 transition-transform duration-300" />
+        )}
+      </a>
+      <MegaMenuPanel isOpen={isOpen} onClose={() => setIsOpen(false)} />
+    </div>
+  );
+};
+
+// Wrapper para gerenciar o acordeão duplo no mobile
+const MobileMegaMenuWrapper = ({ link, active, mobileTreatmentsOpen, setMobileTreatmentsOpen, goToSection }) => {
+  const [activeCat, setActiveCat] = useState(null);
+
+  return (
+    <div className="border-b border-[#CFBFC0]/30">
+      <button
+        type="button"
+        onClick={() => setMobileTreatmentsOpen((v) => !v)}
+        className="w-full flex items-center justify-between py-3.5 text-left"
+      >
+        <span className={`${active ? 'text-[#4A332C] font-medium' : 'text-[#594741]'}`}>
+          {link.label}
+        </span>
+        <ChevronDown className={`w-4 h-4 text-[#594741] transition-transform duration-300 ${mobileTreatmentsOpen ? 'rotate-180' : ''}`} />
+      </button>
+      <div className="grid transition-all duration-300" style={{ gridTemplateRows: mobileTreatmentsOpen ? '1fr' : '0fr' }}>
+        <div className="overflow-hidden">
+          <div className="pb-4 flex flex-col gap-1 pl-2">
+            {CATEGORIES.map((cat) => {
+              const isOpen = activeCat === cat;
+              return (
+                <div key={cat} className="flex flex-col border-l-2 border-[#594741]/10 pl-3 mt-1">
+                  <button
+                    type="button"
+                    onClick={() => setActiveCat(isOpen ? null : cat)}
+                    className="flex items-center justify-between py-2.5 text-left"
+                  >
+                    <span className={`font-sans text-[15px] ${isOpen ? 'text-[#4A332C] font-semibold' : 'text-[#594741]/90'}`}>
+                      {CATEGORY_LABELS[cat]}
+                    </span>
+                    <ChevronDown className={`w-3.5 h-3.5 text-[#594741]/60 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
+                  </button>
+                  <div className="grid transition-all duration-300" style={{ gridTemplateRows: isOpen ? '1fr' : '0fr' }}>
+                    <div className="overflow-hidden">
+                      <ul className="flex flex-col gap-3 py-2 pl-1">
+                        {treatmentsByCategory(cat).map((t) => (
+                          <li key={t.slug}>
+                            <Link 
+                              to={treatmentHref(t, cat)} 
+                              className="font-sans text-[13.5px] text-[#594741]/80 flex items-center gap-2 hover:text-[#4A332C]"
+                            >
+                              <span className="w-1 h-1 rounded-full bg-[#594741]/30" />
+                              {t.title}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+            <Link to="/tratamentos" className="inline-flex items-center gap-1.5 font-sans text-[13px] font-bold text-[#4A332C] mt-4 pl-3">
+              Ver todos os tratamentos <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const Navbar = () => {
   const navRef = useRef(null);
@@ -226,9 +517,9 @@ const Navbar = () => {
       className="fixed top-0 left-0 w-full z-50 pt-[10px] px-3 md:pt-4 md:px-5 pointer-events-none"
     >
       <div
-        className="pointer-events-auto w-full max-w-[1360px] mx-auto h-[76px] md:h-[88px] rounded-[26px] md:rounded-[28px] bg-[rgba(216,202,204,0.78)] backdrop-blur-[20px] backdrop-saturate-[1.15] border border-[rgba(89,71,65,0.18)] shadow-[0_14px_40px_rgba(74,51,44,0.10)] transition-shadow duration-500 [.nav-scrolled_&]:shadow-[0_18px_46px_rgba(74,51,44,0.16)]"
+        className="pointer-events-auto container-global h-[76px] md:h-[88px] rounded-[26px] md:rounded-[28px] bg-[rgba(216,202,204,0.78)] backdrop-blur-[20px] backdrop-saturate-[1.15] border border-[rgba(89,71,65,0.18)] shadow-[0_14px_40px_rgba(74,51,44,0.10)] transition-shadow duration-500 [.nav-scrolled_&]:shadow-[0_18px_46px_rgba(74,51,44,0.16)]"
       >
-        <div className="w-full h-full max-w-[1360px] mx-auto px-4 sm:px-6 md:px-8 lg:px-10 flex xl:grid xl:grid-cols-[auto_1fr_auto] items-center justify-between gap-1 sm:gap-6 xl:gap-10">
+        <div className="w-full h-full container-global px-4 sm:px-6 md:px-8 lg:px-10 flex xl:grid xl:grid-cols-[1fr_auto_1fr] items-center justify-between gap-1 sm:gap-6 xl:gap-10">
 
           {/* ESQUERDA – Hamburger (mobile) + Logo */}
           <div className="justify-self-start flex items-center gap-1 sm:gap-3 shrink-0">
@@ -265,21 +556,13 @@ const Navbar = () => {
               const active = activeId === link.id;
               if (link.mega) {
                 return (
-                  <div key={link.id} className="group relative">
-                    <a
-                      ref={(el) => { linkRefs.current[link.id] = el; }}
-                      href={`#${link.id}`}
-                      onClick={(e) => { e.preventDefault(); goToSection(link.id); }}
-                      className={desktopLinkClass(active)}
-                      aria-current={active ? 'page' : undefined}
-                    >
-                      <span className="inline-flex items-center gap-1">
-                        {link.label}
-                        <ChevronDown className="w-3.5 h-3.5 transition-transform duration-300 group-hover:rotate-180" />
-                      </span>
-                    </a>
-                    <MegaMenuPanel />
-                  </div>
+                  <MegaMenuWrapper 
+                    key={link.id} 
+                    active={active} 
+                    link={link} 
+                    goToSection={goToSection} 
+                    linkRefs={linkRefs} 
+                  />
                 );
               }
               return (
@@ -341,41 +624,14 @@ const Navbar = () => {
 
               if (link.mega) {
                 return (
-                  <div key={link.id} className="border-b border-accent-light/30">
-                    <button
-                      type="button"
-                      onClick={() => setMobileTreatmentsOpen((v) => !v)}
-                      className="w-full flex items-center justify-between py-3.5 text-left"
-                    >
-                      <span className={`${active ? 'text-primary font-medium' : 'text-secondary'}`}>
-                        {link.label}
-                      </span>
-                      <ChevronDown className={`w-4 h-4 text-accent transition-transform duration-300 ${mobileTreatmentsOpen ? 'rotate-180' : ''}`} />
-                    </button>
-                    <div className="grid transition-all duration-300" style={{ gridTemplateRows: mobileTreatmentsOpen ? '1fr' : '0fr' }}>
-                      <div className="overflow-hidden">
-                        <div className="pb-4 flex flex-col gap-4">
-                          {CATEGORIES.map((cat) => (
-                            <div key={cat}>
-                              <p className="text-micro text-accent mb-2">{CATEGORY_LABELS[cat]}</p>
-                              <ul className="flex flex-col gap-1.5">
-                                {treatmentsByCategory(cat).map((t) => (
-                                  <li key={t.slug}>
-                                    <Link to={treatmentHref(t, cat)} className="font-sans text-[14px] text-secondary">
-                                      {t.title}
-                                    </Link>
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                          ))}
-                          <Link to="/tratamentos" className="inline-flex items-center gap-1.5 font-sans text-[13px] font-semibold text-accent mt-1">
-                            Ver todos os tratamentos <ArrowRight className="w-3.5 h-3.5" />
-                          </Link>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  <MobileMegaMenuWrapper
+                    key={link.id}
+                    link={link}
+                    active={active}
+                    mobileTreatmentsOpen={mobileTreatmentsOpen}
+                    setMobileTreatmentsOpen={setMobileTreatmentsOpen}
+                    goToSection={goToSection}
+                  />
                 );
               }
 

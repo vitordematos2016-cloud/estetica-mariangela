@@ -3,14 +3,34 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    scroll-padding-top: 100px;
+    scroll-behavior: smooth;
+  }
   body {
     @apply bg-background text-secondary font-sans antialiased overflow-x-hidden;
   }
 }
 
+@layer components {
+  /* Regra 4: Container Global Responsivo e Centralizado */
+  .container-global {
+    width: min(1360px, calc(100% - 64px));
+    margin-inline: auto;
+  }
+  @media (max-width: 1024px) {
+    .container-global {
+      width: calc(100% - 64px);
+    }
+  }
+  @media (max-width: 768px) {
+    .container-global {
+      width: calc(100% - 40px);
+    }
+  }
+
 /* Escala tipográfica global — só duas famílias (drama/serifada + sans), hierarquia com clamp()
    para aproveitar melhor o espaço em desktop sem depender de tamanhos fixos espalhados pelo código. */
-@layer components {
   .text-h1 {
     font-family: theme('fontFamily.drama');
     font-weight: 500;
@@ -77,10 +97,16 @@
     box-shadow: 0 14px 32px rgba(77, 58, 54, 0.08), 0 4px 12px rgba(77, 58, 54, 0.04);
     transition: transform 450ms cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 450ms ease, background-color 350ms ease, backdrop-filter 350ms ease;
   }
-  .card-surface:hover {
-    transform: translateY(-8px);
-    background-color: rgba(255, 255, 255, 0.6);
-    box-shadow: 0 28px 60px rgba(77, 58, 54, 0.16), 0 10px 20px rgba(77, 58, 54, 0.08);
+  @media (hover: hover) and (pointer: fine) {
+    .card-surface:hover {
+      transform: translateY(-8px);
+      background-color: rgba(255, 255, 255, 0.6);
+      box-shadow: 0 28px 60px rgba(77, 58, 54, 0.16), 0 10px 20px rgba(77, 58, 54, 0.08);
+    }
+  }
+  .card-surface:active {
+    transform: translateY(-2px);
+    background-color: rgba(255, 255, 255, 0.5);
   }
   /* Estado "aberto" (FAQ): mais claro, como se aproximasse da tela */
   .card-surface-open {
@@ -94,8 +120,13 @@
   .card-surface-tilt {
     transform: perspective(1200px) rotateX(var(--card-rx, 0deg)) rotateY(var(--card-ry, 0deg)) translateY(0);
   }
-  .card-surface-tilt:hover {
-    transform: perspective(1200px) rotateX(var(--card-rx, 0deg)) rotateY(var(--card-ry, 0deg)) translateY(-8px);
+  @media (hover: hover) and (pointer: fine) {
+    .card-surface-tilt:hover {
+      transform: perspective(1200px) rotateX(var(--card-rx, 0deg)) rotateY(var(--card-ry, 0deg)) translateY(-8px);
+    }
+    .card-surface-tilt:hover::before {
+      opacity: 1;
+    }
   }
   .card-surface-tilt::before {
     content: '';
@@ -233,21 +264,19 @@
     transition: transform 400ms cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 400ms ease, background-color 300ms ease;
     box-shadow: 0 4px 14px rgba(74, 51, 44, 0.2);
   }
-  .btn-accent:hover {
-    transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 10px 24px rgba(74, 51, 44, 0.3);
-    background-color: theme('colors.accent');
+  @media (hover: hover) and (pointer: fine) {
+    .btn-accent:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 10px 24px rgba(74, 51, 44, 0.3);
+      background-color: theme('colors.accent');
+    }
+    .btn-accent:hover svg {
+      transform: translateX(2px);
+    }
   }
   .btn-accent:active {
     transform: translateY(-1px) scale(0.98);
-  }
-  .btn-accent svg {
-    width: 1.25rem;
-    height: 1.25rem;
-    transition: transform 300ms ease;
-  }
-  .btn-accent:hover svg {
-    transform: translateX(2px);
+    background-color: theme('colors.accent');
   }
 
   /* Glow ao redor de botões principais — halo quente e suave atrás do botão, não neon */
@@ -407,8 +436,13 @@
 button {
   transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
-button:hover {
-  transform: scale(1.03);
+@media (hover: hover) and (pointer: fine) {
+  button:hover {
+    transform: scale(1.03);
+  }
+}
+button:active {
+  transform: scale(0.97);
 }
 
 /* Hero: transição orgânica entre a área clara e a fotografia (curva grande, só desktop) */
@@ -432,5 +466,62 @@ button:hover {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/* ===== Estilos Premium Protocolo V.L.A.E.G. ===== */
+@layer components {
+  .mega-menu-panel {
+    background: rgba(183,159,152,.96);
+    border: 1px solid rgba(89,71,65,.65);
+    box-shadow: 0 24px 60px rgba(74,51,44,.16);
+    border-radius: 24px;
+    backdrop-filter: blur(8px);
+  }
+
+  .protocol-card {
+    background-color: theme('colors.brown-soft');
+    border: 3px solid rgba(255, 255, 255, 0.15); /* Borda branca mais marcante */
+    border-radius: 32px;
+    box-shadow: 0 18px 42px rgba(74,51,44,.12), 0 6px 14px rgba(74,51,44,.06);
+    transition: transform 450ms cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 450ms ease, border-color 450ms ease;
+    transform: perspective(1200px) rotateX(0deg) rotateY(0deg) scale(1);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .protocol-card:hover {
+      transform: perspective(1200px) rotateX(1deg) rotateY(1deg) translateY(-8px) scale(1.01);
+      box-shadow: 0 32px 70px rgba(74,51,44,.20);
+      border-color: rgba(255, 255, 255, 0.4);
+    }
+  }
+  .protocol-card.is-active {
+    transform: perspective(1200px) rotateX(1deg) rotateY(1deg) translateY(-8px) scale(1.01);
+    box-shadow: 0 32px 70px rgba(74,51,44,.20);
+    border-color: rgba(255, 255, 255, 0.4);
+  }
+  .protocol-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(circle at 10% 10%, rgba(255, 255, 255, 0.12), transparent 40%), radial-gradient(circle at 90% 90%, rgba(255, 255, 255, 0.08), transparent 40%);
+    pointer-events: none;
+  }
+
+  .protocol-cta {
+    background-color: theme('colors.coffee-deep');
+    color: theme('colors.white-warm');
+    box-shadow: 0 16px 32px rgba(74,51,44,.16);
+    border-radius: 9999px;
+    transition: transform 350ms cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 350ms ease;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .protocol-cta:hover {
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 0 26px 48px rgba(74,51,44,.24);
+    }
+  }
+  .protocol-cta:active {
+    transform: translateY(-1px) scale(0.98);
   }
 }

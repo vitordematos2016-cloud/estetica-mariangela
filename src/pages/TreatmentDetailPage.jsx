@@ -56,7 +56,7 @@ const TreatmentDetailPage = () => {
     <div ref={container}>
       {/* Hero específico */}
       <section className={`relative pt-[110px] md:pt-[130px] pb-16 lg:pb-24 px-6 md:px-12 mauve-surface overflow-hidden`}>
-        <div className={`max-w-6xl mx-auto flex flex-col ${photoRight ? 'lg:flex-row-reverse' : 'lg:flex-row'} items-center gap-10 lg:gap-16`}>
+        <div className={`container-global flex flex-col ${photoRight ? 'lg:flex-row-reverse' : 'lg:flex-row'} items-center gap-10 lg:gap-16`}>
           <div className="td-hero-photo w-full lg:w-[48%] relative aspect-[4/3] overflow-hidden shadow-[0_35px_70px_-35px_rgba(74,51,44,0.4)]" style={{ borderRadius: photoRight ? '120px 24px 120px 24px' : '24px 120px 24px 120px' }}>
             <img src={treatment.img} alt={treatment.title} className="w-full h-full object-cover" />
           </div>

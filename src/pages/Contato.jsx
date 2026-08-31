@@ -67,7 +67,7 @@ const Contato = () => {
       />
 
       {/* Seção "Onde Estamos" */}
-      <section ref={locationRef} className="max-w-[1400px] mx-auto px-6 md:px-12 py-16 lg:py-24">
+      <section ref={locationRef} className="container-global py-16 lg:py-24">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           
           {/* Esquerda: Info (40%) */}

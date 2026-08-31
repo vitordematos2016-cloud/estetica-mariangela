@@ -119,7 +119,7 @@ const AboutTeaser = () => {
 
   return (
     <section id="sobre" ref={container} className="relative w-full overflow-hidden px-5 md:px-12 lg:px-[60px] pb-24 pt-16 bg-background scroll-mt-[96px] md:scroll-mt-[114px]">
-      <div className="max-w-[1360px] mx-auto w-full flex flex-col lg:flex-row items-center gap-12 lg:gap-0 lg:justify-between">
+      <div className="container-global flex flex-col lg:flex-row items-center gap-12 lg:gap-0 lg:justify-between">
         
         {/* Esquerda: Fotografia (42%) */}
         <div className="w-full lg:w-[45%] flex justify-center lg:justify-start lg:pl-4 order-2 lg:order-1 mt-6 lg:mt-0 relative z-10">

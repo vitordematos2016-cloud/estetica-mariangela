@@ -159,7 +159,7 @@ const Payments = () => {
         </svg>
       </div>
 
-      <div className="relative z-10 max-w-[1360px] mx-auto w-full flex flex-col">
+      <div className="relative z-10 container-global flex flex-col">
         
         {/* Cabeçalho */}
         <div className="flex flex-col items-center text-center mb-10 lg:mb-14">

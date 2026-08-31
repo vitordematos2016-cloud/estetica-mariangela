@@ -140,7 +140,7 @@ const Sobre = () => {
     <div ref={container} className="w-full bg-background pt-32 pb-10">
       
       <section className="relative w-full overflow-hidden px-5 md:px-12 lg:px-[60px] pb-24">
-        <div className="max-w-[1360px] mx-auto w-full flex flex-col lg:flex-row items-center gap-12 lg:gap-0 lg:justify-between">
+        <div className="container-global flex flex-col lg:flex-row items-center gap-12 lg:gap-0 lg:justify-between">
           
           <div className="w-full lg:w-[45%] flex justify-center lg:justify-start lg:pl-4 order-2 lg:order-1 mt-6 lg:mt-0 relative z-10">
             <div className="relative w-full max-w-[420px] lg:max-w-none lg:w-[480px] h-[520px] lg:h-[620px] reveal-image">
@@ -256,7 +256,7 @@ drop-shadow-[0_10px_15px_rgba(0,0,0,0.4)] -translate-x-1/2 -translate-y-full" />
       </section>
 
       <section id="sobre-diferenciais" className="relative w-full bg-card/40 py-24 lg:py-32 px-5 md:px-12 lg:px-[60px] overflow-hidden">
-        <div className="max-w-[1360px] mx-auto w-full flex flex-col lg:flex-row items-center gap-16 lg:gap-10">
+        <div className="container-global flex flex-col lg:flex-row items-center gap-16 lg:gap-10">
           
           <div className="w-full lg:w-[55%] flex flex-col order-2 lg:order-1">
             
@@ -349,7 +349,7 @@ drop-shadow-[0_10px_15px_rgba(0,0,0,0.4)] -translate-x-1/2 -translate-y-full" />
       </section>
 
       <section className="relative w-full pt-20 lg:pt-28 pb-10 px-5 md:px-12 lg:px-[60px]">
-        <div className="max-w-[1200px] mx-auto reveal-up">
+        <div className="container-global reveal-up">
           <div className="relative w-full bg-card rounded-[32px] lg:rounded-[48px] overflow-hidden p-10 lg:p-16 flex flex-col lg:flex-row items-center justify-between gap-10 shadow-xl shadow-accent/5 border border-accent/10">
             
             <BrandMark className="absolute right-0 bottom-0 w-80 h-80 text-accent opacity-10 translate-x-1/4 translate-y-1/4 pointer-events-none" />

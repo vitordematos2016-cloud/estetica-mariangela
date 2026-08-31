@@ -56,7 +56,7 @@ const Packages = () => {
 
   return (
     <section ref={container} className="relative py-24 lg:py-32 px-6 md:px-12 bg-background overflow-hidden">
-      <div className="max-w-6xl mx-auto">
+      <div className="container-global">
         
         {/* Cabeçalho centralizado */}
         <div className="pkg-head flex flex-col items-center text-center max-w-2xl mx-auto mb-16">

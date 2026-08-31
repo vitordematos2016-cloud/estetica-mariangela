@@ -78,7 +78,7 @@ const Features = () => {
         <div className="absolute top-[10%] right-[-10%] w-[50vw] h-[50vw] rounded-full bg-[#EBD8D2] opacity-20 blur-[100px]"></div>
       </div>
 
-      <div className="relative z-10 max-w-[1450px] mx-auto w-full flex flex-col lg:flex-row items-center lg:items-center gap-12 lg:gap-16">
+      <div className="relative z-10 container-global w-full flex flex-col lg:flex-row items-center lg:items-center gap-12 lg:gap-16">
         
         {/* Coluna Esquerda: Conteúdo (44%) */}
         <div className="w-full lg:w-[44%] flex flex-col order-1 lg:order-1 justify-center">

@@ -50,7 +50,7 @@ const Hero = () => {
       
       <span className="ambient-glow hidden lg:block w-[500px] h-[500px] left-1/2 top-0 -translate-x-1/2" />
 
-      <div className="relative z-20 max-w-[1200px] mx-auto flex flex-col items-center text-center px-6 sm:px-10 pb-12 w-full">
+      <div className="relative z-20 container-global flex flex-col items-center text-center px-6 sm:px-10 pb-12 w-full">
         
         <div className="hero-anim-1 flex items-center justify-center gap-2 font-sans text-[11px] md:text-[12px] tracking-[0.4em] text-primary font-bold mb-6 uppercase">
           Estética <span className="w-1 h-1 bg-accent rounded-full" /> Cuidado <span className="w-1 h-1 bg-accent rounded-full" /> Bem-Estar
