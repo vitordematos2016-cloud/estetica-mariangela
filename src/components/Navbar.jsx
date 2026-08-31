@@ -145,11 +145,24 @@ const MegaMenuPanel = ({ isOpen, onClose }) => {
             })}
             
             {/* CTA Extra embaixo das categorias */}
-            <div className="mt-auto pt-6 px-4">
-              <p className="font-sans text-[11px] text-[#4A332C]/70 leading-relaxed font-medium">
-                <Leaf className="w-3.5 h-3.5 inline mr-1 opacity-60" />
-                Todos os tratamentos são personalizados para você.
-              </p>
+            <div className="mt-auto pt-6 pr-4">
+              <Link
+                to="/pacotes"
+                onClick={() => {
+                  onClose();
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                className="group flex flex-col justify-center w-full relative overflow-hidden rounded-[18px] bg-[#4A332C] text-[#FFF8F6] shadow-[0_8px_16px_rgba(74,51,44,.12)] hover:shadow-[0_12px_24px_rgba(74,51,44,.15)] transition-all duration-300 hover:-translate-y-0.5 p-4"
+              >
+                <div className="flex items-center justify-between relative z-10">
+                  <div className="flex items-center gap-2.5">
+                    <Sparkles className="w-4 h-4 text-[#F4E6DF]" />
+                    <span className="font-sans font-bold text-[13.5px] tracking-wide text-white">Pacotes Especiais</span>
+                  </div>
+                  <ArrowRight className="w-4 h-4 opacity-80 group-hover:translate-x-1 transition-transform text-[#F4E6DF]" />
+                </div>
+                <div className="absolute top-0 right-0 w-[60px] h-[60px] bg-white/10 rounded-full -translate-y-1/2 translate-x-1/3 pointer-events-none" />
+              </Link>
             </div>
           </div>
 
@@ -289,7 +302,7 @@ const MegaMenuWrapper = ({ active, link, goToSection, linkRefs }) => {
 };
 
 // Wrapper para gerenciar o acordeão duplo no mobile
-const MobileMegaMenuWrapper = ({ link, active, mobileTreatmentsOpen, setMobileTreatmentsOpen, goToSection }) => {
+const MobileMegaMenuWrapper = ({ link, active, mobileTreatmentsOpen, setMobileTreatmentsOpen, goToSection, closeMenu }) => {
   const [activeCat, setActiveCat] = useState(null);
 
   return (
@@ -328,6 +341,7 @@ const MobileMegaMenuWrapper = ({ link, active, mobileTreatmentsOpen, setMobileTr
                           <li key={t.slug}>
                             <Link 
                               to={treatmentHref(t, cat)} 
+                              onClick={closeMenu}
                               className="font-sans text-[13.5px] text-[#594741]/80 flex items-center gap-2 hover:text-[#4A332C]"
                             >
                               <span className="w-1 h-1 rounded-full bg-[#594741]/30" />
@@ -341,8 +355,16 @@ const MobileMegaMenuWrapper = ({ link, active, mobileTreatmentsOpen, setMobileTr
                 </div>
               );
             })}
-            <Link to="/tratamentos" className="inline-flex items-center gap-1.5 font-sans text-[13px] font-bold text-[#4A332C] mt-4 pl-3">
+            <Link to="/tratamentos" onClick={() => { closeMenu(); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="inline-flex items-center gap-1.5 font-sans text-[13.5px] font-bold text-[#4A332C] mt-5 pl-3">
               Ver todos os tratamentos <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+            <Link to="/pacotes" onClick={() => { closeMenu(); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="group mt-5 flex items-center justify-between p-3.5 rounded-[16px] bg-[#4A332C] text-[#FFF8F6] shadow-md relative overflow-hidden">
+              <div className="flex items-center gap-3 relative z-10">
+                <Sparkles className="w-4 h-4 text-[#F4E6DF]" />
+                <span className="font-sans font-semibold text-[13.5px] text-white">Pacotes Especiais</span>
+              </div>
+              <ArrowRight className="w-4 h-4 opacity-80 group-hover:translate-x-1 transition-transform text-[#F4E6DF] relative z-10" />
+              <div className="absolute top-0 right-0 w-[60px] h-[60px] bg-white/5 rounded-full -translate-y-1/2 translate-x-1/3 pointer-events-none" />
             </Link>
           </div>
         </div>
@@ -517,9 +539,9 @@ const Navbar = () => {
       className="fixed top-0 left-0 w-full z-50 pt-[10px] px-3 md:pt-4 md:px-5 pointer-events-none"
     >
       <div
-        className="pointer-events-auto container-global h-[76px] md:h-[88px] rounded-[26px] md:rounded-[28px] bg-[rgba(216,202,204,0.78)] backdrop-blur-[20px] backdrop-saturate-[1.15] border border-[rgba(89,71,65,0.18)] shadow-[0_14px_40px_rgba(74,51,44,0.10)] transition-shadow duration-500 [.nav-scrolled_&]:shadow-[0_18px_46px_rgba(74,51,44,0.16)]"
+        className="pointer-events-auto w-full max-w-[1360px] mx-auto h-[76px] md:h-[88px] rounded-[26px] md:rounded-[28px] bg-[rgba(216,202,204,0.78)] backdrop-blur-[20px] backdrop-saturate-[1.15] border border-[rgba(89,71,65,0.18)] shadow-[0_14px_40px_rgba(74,51,44,0.10)] transition-shadow duration-500 [.nav-scrolled_&]:shadow-[0_18px_46px_rgba(74,51,44,0.16)]"
       >
-        <div className="w-full h-full container-global px-4 sm:px-6 md:px-8 lg:px-10 flex xl:grid xl:grid-cols-[1fr_auto_1fr] items-center justify-between gap-1 sm:gap-6 xl:gap-10">
+        <div className="w-full h-full px-4 sm:px-6 md:px-8 lg:px-10 flex xl:grid xl:grid-cols-[auto_1fr_auto] items-center justify-between gap-1 sm:gap-6 xl:gap-10">
 
           {/* ESQUERDA – Hamburger (mobile) + Logo */}
           <div className="justify-self-start flex items-center gap-1 sm:gap-3 shrink-0">
@@ -631,6 +653,7 @@ const Navbar = () => {
                     mobileTreatmentsOpen={mobileTreatmentsOpen}
                     setMobileTreatmentsOpen={setMobileTreatmentsOpen}
                     goToSection={goToSection}
+                    closeMenu={() => setMobileOpen(false)}
                   />
                 );
               }

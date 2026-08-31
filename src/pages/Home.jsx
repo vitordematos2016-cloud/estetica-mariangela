@@ -1,6 +1,7 @@
 import useSeo from '../hooks/useSeo.js';
 import Hero from '../sections/Hero.jsx';
 import Features from '../sections/Features.jsx';
+import PromoPackages from '../sections/PromoPackages.jsx';
 import AboutTeaser from '../sections/AboutTeaser.jsx';
 import Protocol from '../sections/Protocol.jsx';
 import Journey from '../sections/Journey.jsx';
@@ -24,6 +25,7 @@ const Home = () => {
       <Protocol />
       <AboutTeaser />
       <Features />
+      <PromoPackages />
       <Journey />
       <Payments />
       <FaqPreview />
