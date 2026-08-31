@@ -27,15 +27,15 @@ export const MAPS_EMBED_URL = `https://www.google.com/maps?q=${ENCODED_ADDRESS}&
 export const MAPS_DIRECTIONS_URL = `https://www.google.com/maps/dir/?api=1&destination=${ENCODED_ADDRESS}`;
 
 // WhatsApp — mensagem oficial de abertura, codificada corretamente.
-const WA_MESSAGE = `Olá! 💕 Que bom ter você por aqui!
+const WA_MESSAGE = `Olá! Que bom ter você por aqui!
 
-Será um prazer cuidar de você. ✨
+Será um prazer cuidar de você.
 
 Para agendarmos seu atendimento, me informe, por favor, qual procedimento você deseja realizar e qual o melhor dia e horário para você.
 
-Vou verificar a disponibilidade e retornar para confirmarmos seu horário. 🌷
+Vou verificar a disponibilidade e retornar para confirmarmos seu horário.
 
-Seu momento de autocuidado começa aqui! 💆‍♀️✨`;
+Seu momento de autocuidado começa aqui!`;
 
 // Removendo o WA_LINK exportado para forçar o uso da função dinâmica.
 // export const WA_LINK = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(WA_MESSAGE)}`;

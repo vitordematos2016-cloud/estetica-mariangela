@@ -21,7 +21,7 @@ export const PROMO_PACKAGES = [
     newPrice: '1.900',
     installments: '10x de R$ 190,00',
     shortText: 'Uma oferta de alto valor percebido para o seu conforto.',
-    waMessage: 'Olá! 💕 Vi no site o pacote Depilação de Laser Premium e gostaria de saber mais sobre ele.'
+    waMessage: 'Olá! Vi no site o pacote Depilação de Laser Premium e gostaria de saber mais sobre ele.'
   },
   {
     id: 'pele-renovada',
@@ -40,7 +40,7 @@ export const PROMO_PACKAGES = [
     newPrice: '1.300',
     installments: '10x de R$ 130,00',
     shortText: 'Uma combinação de cuidados faciais voltada para viço, textura e renovação da aparência da pele.',
-    waMessage: 'Olá! 💕 Vi no site o pacote Projeto Pele Renovada e gostaria de saber mais sobre ele.'
+    waMessage: 'Olá! Vi no site o pacote Projeto Pele Renovada e gostaria de saber mais sobre ele.'
   },
   {
     id: 'projeto-contorno',
@@ -59,7 +59,7 @@ export const PROMO_PACKAGES = [
     newPrice: '1.000',
     installments: '10x de R$ 100,00',
     shortText: 'Combinação de procedimentos corporais definida para protocolos de cuidado e contorno corporal, conforme avaliação individual.',
-    waMessage: 'Olá! 💕 Vi no site o pacote Projeto Contorno e gostaria de saber mais sobre ele.'
+    waMessage: 'Olá! Vi no site o pacote Projeto Contorno e gostaria de saber mais sobre ele.'
   },
   {
     id: 'detox-leveza',
@@ -77,7 +77,7 @@ export const PROMO_PACKAGES = [
     newPrice: '700',
     installments: '10x de R$ 70,00',
     shortText: 'Uma combinação voltada ao conforto, relaxamento, bem-estar e sensação de leveza.',
-    waMessage: 'Olá! 💕 Vi no site o pacote Detox & Leveza e gostaria de saber mais sobre ele.'
+    waMessage: 'Olá! Vi no site o pacote Detox & Leveza e gostaria de saber mais sobre ele.'
   },
   {
     id: 'alivio-relaxamento',
@@ -94,7 +94,7 @@ export const PROMO_PACKAGES = [
     newPrice: '200',
     installments: 'até 10x de R$ 20,00',
     shortText: 'Uma combinação pensada para momentos de relaxamento, autocuidado e bem-estar.',
-    waMessage: 'Olá! 💕 Vi no site o pacote Alívio & Relaxamento e gostaria de saber mais sobre ele.'
+    waMessage: 'Olá! Vi no site o pacote Alívio & Relaxamento e gostaria de saber mais sobre ele.'
   }
 ];
 
