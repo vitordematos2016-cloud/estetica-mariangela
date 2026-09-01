@@ -80,7 +80,7 @@ const Protocol = () => {
       title: 'Laser Hakon 4D',
       subtext: 'Redução progressiva dos pelos',
       cta: 'Ver todos os tratamentos',
-      img: 'https://images.unsplash.com/photo-1552693673-1bf958298935?q=80&w=800&auto=format&fit=crop',
+      img: '/capa-laser-hakon-4d.png',
       mt: 'md:mt-0'
     }
   ];

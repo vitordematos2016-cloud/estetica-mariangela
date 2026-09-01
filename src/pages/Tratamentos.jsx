@@ -69,7 +69,7 @@ const Tratamentos = () => {
         id: 'laser',
         title: 'DEPILAÇÃO A LASER',
         description: 'Mais conforto, praticidade e pele lisa por muito mais tempo.',
-        image: 'https://images.unsplash.com/photo-1552693673-1bf958298935?q=80&w=1200&auto=format&fit=crop',
+        image: '/capa-laser-hakon-4d.png',
         isLaser: true,
       }
     ];

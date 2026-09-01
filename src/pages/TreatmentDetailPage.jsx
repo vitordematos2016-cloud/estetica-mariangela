@@ -8,6 +8,7 @@ import { buildWaLink } from '../data/business.js';
 import { getTreatmentBySlug } from '../data/treatments.js';
 import { TREATMENT_DETAILS } from '../data/treatmentDetails.js';
 import { FAQS } from '../data/faqs.js';
+import TreatmentMediaAccordion from '../components/gallery/TreatmentMediaAccordion.jsx';
 
 const TreatmentDetailPage = () => {
   const { slug } = useParams();
@@ -58,7 +59,7 @@ const TreatmentDetailPage = () => {
       <section className={`relative pt-[110px] md:pt-[130px] pb-16 lg:pb-24 px-6 md:px-12 mauve-surface overflow-hidden`}>
         <div className={`container-global flex flex-col ${photoRight ? 'lg:flex-row-reverse' : 'lg:flex-row'} items-center gap-10 lg:gap-16`}>
           <div className="td-hero-photo w-full lg:w-[48%] relative aspect-[4/3] overflow-hidden shadow-[0_35px_70px_-35px_rgba(74,51,44,0.4)]" style={{ borderRadius: photoRight ? '120px 24px 120px 24px' : '24px 120px 24px 120px' }}>
-            <img src={treatment.img} alt={treatment.title} className="w-full h-full object-cover" />
+            <img src={treatment.img} alt={treatment.title} className="w-full h-full object-cover" style={{ objectPosition: treatment.imgPosition || 'center 20%' }} />
           </div>
           <div className="td-hero-text w-full lg:w-[52%]">
             <nav className="flex items-center flex-wrap gap-1.5 font-sans text-[12px] text-secondary mb-7">
@@ -83,6 +84,9 @@ const TreatmentDetailPage = () => {
           </div>
         </div>
       </section>
+
+      {/* Accordion de Mídia Dinâmico (Galeria) */}
+      <TreatmentMediaAccordion treatmentSlug={slug} />
 
       {/* Explicação */}
       <section className="td-block py-16 lg:py-20 px-6 md:px-12 mauve-surface">
@@ -119,35 +123,49 @@ const TreatmentDetailPage = () => {
         </div>
       </section>
 
-      {/* FAQ relacionado */}
+      {/* FAQ */}
       {relatedFaqs.length > 0 && (
-        <section className="td-block py-16 lg:py-20 px-6 md:px-12 mauve-surface">
-          <div className="max-w-2xl mx-auto">
-            <h2 className="font-drama text-primary text-[22px] sm:text-[26px] mb-8 text-center">Perguntas frequentes</h2>
+        <section className="td-block py-16 lg:py-24 px-6 md:px-12 mauve-surface">
+          <div className="max-w-3xl mx-auto">
+            <h2 className="font-drama text-primary text-[24px] sm:text-[28px] mb-8 text-center">
+              Dúvidas Frequentes
+            </h2>
             <div className="flex flex-col gap-3">
-              {relatedFaqs.map((item, i) => {
-                const isOpen = openFaq === i;
-                return (
-                  <div key={item.q} className={`card-surface rounded-[18px] ${isOpen ? 'card-surface-open' : ''}`}>
-                    <button onClick={() => setOpenFaq(isOpen ? -1 : i)} className="w-full flex items-center justify-between gap-4 px-6 py-5 text-left group">
-                      <span className="font-drama text-[16px] text-primary group-hover:text-accent transition-colors">{item.q}</span>
-                      <Plus className={`w-4 h-4 text-accent shrink-0 transition-transform duration-300 ${isOpen ? 'rotate-45' : ''}`} />
-                    </button>
-                    <div className="grid transition-all duration-300" style={{ gridTemplateRows: isOpen ? '1fr' : '0fr' }}>
-                      <div className="overflow-hidden">
-                        <p className="font-sans text-[14px] text-secondary leading-relaxed px-6 pb-5">{item.a}</p>
-                      </div>
-                    </div>
+              {relatedFaqs.map((faq, i) => (
+                <div key={i} className="bg-background rounded-2xl overflow-hidden shadow-sm">
+                  <button
+                    onClick={() => setOpenFaq(openFaq === i ? -1 : i)}
+                    className="w-full text-left px-6 py-5 flex items-center justify-between gap-4"
+                  >
+                    <span className="font-sans font-medium text-primary text-[15px] pr-4">{faq.q}</span>
+                    <Plus className={`w-5 h-5 text-accent shrink-0 transition-transform duration-300 ${openFaq === i ? 'rotate-45' : ''}`} />
+                  </button>
+                  <div
+                    className="overflow-hidden transition-all duration-300 ease-in-out"
+                    style={{ maxHeight: openFaq === i ? '300px' : '0' }}
+                  >
+                    <p className="px-6 pb-5 font-sans text-[14px] text-secondary leading-relaxed">
+                      {faq.a}
+                    </p>
                   </div>
-                );
-              })}
+                </div>
+              ))}
             </div>
           </div>
         </section>
       )}
 
+      {/* Mensagem Padrão de Avaliação */}
+      <section className="td-block pt-10 pb-4 px-6 md:px-12 bg-background text-center">
+        <div className="max-w-3xl mx-auto px-6 py-6 border border-mauve-dark/20 rounded-[16px] bg-mauve/30">
+          <p className="font-sans text-[14.5px] text-secondary leading-relaxed">
+            Cada atendimento é planejado de forma individualizada, considerando as características, necessidades e objetivos de cada pessoa. A indicação e o protocolo são definidos após avaliação profissional.
+          </p>
+        </div>
+      </section>
+
       {/* CTA final */}
-      <section className="td-block py-20 lg:py-24 px-6 md:px-12 bg-background text-center flex flex-col items-center">
+      <section className="td-block py-12 lg:py-16 px-6 md:px-12 bg-background text-center flex flex-col items-center">
         <p className="font-drama italic text-primary text-[22px] sm:text-[26px] mb-8 max-w-md">
           Vamos conversar sobre o que é melhor para você.
         </p>
@@ -158,7 +176,7 @@ const TreatmentDetailPage = () => {
           className="btn-accent h-[56px] px-8"
         >
           <WhatsAppIcon className="w-[18px] h-[18px]" />
-          Agendar atendimento
+          Agendar atendimento pelo WhatsApp
           <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
         </a>
       </section>
