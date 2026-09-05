@@ -33,7 +33,10 @@ const CATEGORIES = ['facial', 'corporal', 'depilacao'];
 
 // Tratamentos de uma categoria, já filtrados — única fonte usada pelo mega-menu desktop
 // e pelo acordeão mobile, para não duplicar a mesma lógica de filtro/link nos dois lugares.
-const treatmentsByCategory = (cat) => TREATMENTS_CATALOG.filter((t) => t.category === cat);
+const treatmentsByCategory = (cat) => 
+  TREATMENTS_CATALOG
+    .filter((t) => t.category === cat)
+    .sort((a, b) => a.title.localeCompare(b.title));
 const treatmentHref = (t, cat) => (t.hasDetailPage ? `/tratamentos/${t.slug}` : `/tratamentos?cat=${cat}`);
 
 const CAT_ICONS = {

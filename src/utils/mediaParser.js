@@ -5,6 +5,7 @@
 // Associa nomes populares/variáveis aos slugs oficiais dos tratamentos.
 const treatmentAliases = {
   // Faciais
+  'dermaplaning': ['dermaplaning'],
   'microagulhamento-facial': ['microagulhamento', 'micro-agulhamento', 'microagulhamentofacial'],
   'jato-de-plasma': ['jato-plasma', 'plasma', 'jatodeplasma'],
   'limpeza-de-pele': ['limpeza-pele', 'limpeza', 'limpezadepele'],

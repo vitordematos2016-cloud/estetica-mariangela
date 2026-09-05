@@ -21,6 +21,24 @@ export const TREATMENT_DETAILS = {
     ],
     "layoutVariant": "photo-left"
   },
+  "dermaplaning": {
+    "explanation": "Procedimento de esfoliação física superficial realizado com bisturi cirúrgico esterilizado, que remove células mortas e a fina penugem facial (vellus).",
+    "highlightsLabel": "Benefícios do tratamento:",
+    "highlights": [
+      "Pele incrivelmente lisa e macia",
+      "Melhora imediata na luminosidade",
+      "Textura mais uniforme",
+      "Facilita a absorção de dermocosméticos",
+      "Acabamento perfeito para a maquiagem"
+    ],
+    "howItWorks": "Uma lâmina específica desliza suavemente sobre a pele, removendo a barreira superficial de forma segura e indolor para revelar uma pele renovada.",
+    "careNotes": "Indicado para quase todos os tipos de pele. É essencial o uso de protetor solar após o procedimento.",
+    "relatedFaqIndices": [
+      0,
+      1
+    ],
+    "layoutVariant": "photo-right"
+  },
   "jato-de-plasma": {
     "explanation": "Procedimento realizado com equipamento que gera arco de plasma controlado sobre a pele.",
     "highlightsLabel": "Pode ser indicado para protocolos relacionados a:",

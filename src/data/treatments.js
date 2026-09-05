@@ -120,6 +120,15 @@ export const TREATMENTS_CATALOG = [
     img: '/capas-tratamentos-facial/ultrassom-facial.webp',
     hasDetailPage: true,
   },
+  {
+    slug: 'dermaplaning',
+    title: 'Dermaplaning',
+    category: 'facial',
+    summary: 'O Dermaplaning é um método avançado de esfoliação física facial que utiliza um bisturi cirúrgico esterilizado para remover suavemente a camada superficial de células mortas e a penugem (vellus) do rosto.\n\nEsse procedimento proporciona uma pele incrivelmente lisa, iluminada e revitalizada imediatamente após a sessão. Ao eliminar a barreira de células mortas, o tratamento otimiza a absorção de dermocosméticos e garante um acabamento impecável para a maquiagem.\n\nIndicado para quase todos os tipos de pele, o Dermaplaning é um procedimento indolor e seguro que ajuda a suavizar linhas finas, clarear manchas superficiais e revelar o brilho natural do seu rosto.',
+    icon: Sparkles,
+    img: '/capas-tratamentos-facial/dermaplaning.jpg',
+    hasDetailPage: true,
+  },
 
   // ---- Demais Corporais ----
   {
@@ -200,23 +209,24 @@ export const CATEGORY_LABELS = {
 // da seção "Tratamentos em Destaque" da Home). Usada para numerar os cards (01, 02...).
 export const CATALOG_ORDER = {
   facial: [
-    'limpeza-de-pele',
+    'dermaplaning',
     'jato-de-plasma',
-    'radiofrequencia-facial',
-    'peeling',
+    'limpeza-de-pele',
     'microagulhamento-facial',
+    'peeling',
+    'radiofrequencia-facial',
     'ultrassom-facial',
   ],
   corporal: [
-    'massagem-relaxante',
-    'ventosas',
+    'correntes',
     'detox-corporal',
     'drenagem-linfatica',
     'drenagem-pos-operatoria',
     'massagem-modeladora',
+    'massagem-relaxante',
     'radiofrequencia-corporal',
-    'correntes',
     'ultrassom-corporal',
+    'ventosas',
   ],
   depilacao: ['laser-hakon-4d'],
 };
